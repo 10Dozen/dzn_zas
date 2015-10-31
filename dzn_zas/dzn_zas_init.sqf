@@ -26,7 +26,7 @@ ISALLOWED(dzn_zas_allowZeusKits)
 waitUntil { !isNil "dzn_gear_initialized" && { dzn_gear_initialized } };
 
 dzn_zas_kitPerSquadRestricted	= true	// e.g. true - only 1 MG per squad, false - anyone can pick MG kit
-
+dzn_zas_kitDefaultOnRespawn	= ""; 	// Kit name to assign, "" - do not assign
 
 ISALLOWEDCLOSE
 
