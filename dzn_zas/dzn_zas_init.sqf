@@ -26,7 +26,7 @@ ISALLOWED(dzn_zas_allowZeusKits)
 waitUntil { !isNil "dzn_gear_initialized" && { dzn_gear_initialized } };
 
 dzn_zas_kitPerSquadRestricted	= true	// e.g. true - only 1 MG per squad, false - anyone can pick MG kit
-call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kit_list.sqf";
+
 
 ISALLOWEDCLOSE
 
@@ -34,10 +34,13 @@ ISALLOWEDCLOSE
 // Initializing
 // ********************************
 if (dzn_zas_allowZeusRallyPoint) then {
+	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_zrpFunctions.sqf";
 	// [] spawn FUNCTION
 };
 
 if (dzn_zas_allowZeusKits) then {
+	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kitFunctions.sqf";
+	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kitList.sqf";
 	// [] spawn FUNCTION
 };
 
