@@ -7,7 +7,7 @@ dzn_zas_zrpMoveToRP = {
 	if (vehicle _this != _this) then {
 		moveOut _this;
 	};
-	_this switchAnim "";
+	_this switchMove "";
 	_this setVelocity [0,0,0];
 	_this setPosASL (getPosASL zrp);
 	_this allowDamage true;
