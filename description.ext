@@ -1,1 +1,22 @@
+class Header {
+	gameType = Coop;
+	minPlayers = 1;
+	maxPlayers = 20;
+};
 
+onLoadName 			= "ZAS 0.1";
+author 				  = "10Dozen";
+
+enableDebugConsole = 2;
+
+// ==============
+// Respawn - Base
+// ==============
+respawn = 3;
+respawnDelay = 10;		 // Should be specified after mission init with setPlayerRespawnTime (local)
+respawnOnStart = 0;  	//Dont respawn on start. Don't run respawn script on start.
+respawnTemplates[] = {"Counter","Revive"}; // Wave doesn't work =(
+
+reviveDelay = 10;		// 10 second to Revie another player. MedKit will half.
+reviveForceRespawnDelay = 5;	// 12 second to hold space to respawn. Anyway u can do it with Menu - Respawn
+reviveBleedOutDelay = 600;	// 10 minutes of bleedout
