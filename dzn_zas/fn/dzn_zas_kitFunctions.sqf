@@ -1,3 +1,5 @@
+#define	DEBUG		false
+
 dzn_zas_kitInitList = {
 	// call dzn_zas_kitInitList
 	private["_grp"];
@@ -24,7 +26,7 @@ dzn_zas_kitInitList = {
 };
 
 dzn_zas_kitSetActions = {
-	private["_box","_kitDName","_kitName"];
+	private["_box","_kitDName","_kitName","_kitIcon"];
 	
 	{
 		_box = _x;
@@ -32,16 +34,17 @@ dzn_zas_kitSetActions = {
 		{
 			_kitDName = _x select 0;
 			_kitName = _x select 1;
+			_kitIcon = if (isNil {_x select 3}) then { dzn_zas_defaultKitIcon } else { _x select 3 };			
 			
 			_box addAction [
-				format ["Kit: %1", _kitDName]
+				format ["<t color='#AACC00'><img image='%2'/>Kit: %1</t>", _kitDName, _kitIcon]
 				, {
 					private["_kitName","_kitDName"];
 					_kitName = (_this select 3) select 1;
 					_kitDName = (_this select 3) select 0;
-					
+					if (DEBUG) then { player sideChat format["Action: %1 - %2", _kitDName, _kitName]; };
 					_kitName call dzn_zas_kitAssign;
-					hint format ["Kit %1 is assigned.", _kitDName];
+					hint  parseText format ["<t color='#AACC00'>%1</t> kit is assigned.", _kitDName];
 				}
 				, [_kitDName, _kitName], 6, true, true, ""
 				, format ["'%1' call dzn_zas_kitIsAvailable", _kitName]		
@@ -57,9 +60,8 @@ dzn_zas_kitIsAvailable = {
 		true
 	} else {
 		false
-	}	
+	}
 };
-
 
 dzn_zas_kitGetGroupKits = {
 	// all dzn_zas_kitGetGroupKits
@@ -71,8 +73,6 @@ dzn_zas_kitGetAvailableKits = {
 	(group player) getVariable "dzn_zas_availableKits"
 };
 
-
-
 dzn_zas_kitUpdateKits = {
 	// @Kit call dzn_zas_kitUpdateAvailableKits
 	params["_kit", "_type"];
@@ -80,29 +80,40 @@ dzn_zas_kitUpdateKits = {
 	_curKit = player getVariable ["dzn_zas_kitAssigned", dzn_zas_kitDefaultOnRespawn];
 	
 	_grpId = (call dzn_zas_kitGetGroupKits) find _curKit;
-	_avId = (call dzn_zas_kitGetAvailableKits) find _kit;
+	_avId = (call dzn_zas_kitGetAvailableKits) find _kit;		
 	
+	// Add kit to Group Kits	
+	(call dzn_zas_kitGetGroupKits) pushBack _kit;
 	(group player) setVariable [	
 		"dzn_zas_groupKits"
-		, (call dzn_zas_kitGetGroupKits) pushBack _kit
+		,(call dzn_zas_kitGetGroupKits)
 		,true
 	];
+
+	// Remove kit from Available Kit
+	(call dzn_zas_kitGetAvailableKits) deleteAt _avId;	
 	(group player) setVariable [
 		"dzn_zas_availableKits"
-		, (call dzn_zas_kitGetAvailableKits) deleteAt _avId
+		,(call dzn_zas_kitGetAvailableKits)
 		,true
 	];
 	
-	if (_curKit != dzn_zas_kitDefaultOnRespawn) then {
+	// If player not own default, then 
+	// need to return kit to available and remove from group kits
+	if (_curKit != dzn_zas_kitDefaultOnRespawn) then {	
+		// Remove from group kits
+		(call dzn_zas_kitGetGroupKits) deleteAt _grpId;
 		(group player) setVariable [
 			"dzn_zas_groupKits"
-			, (call dzn_zas_kitGetGroupKits) deleteAt _grpId
+			,(call dzn_zas_kitGetGroupKits)
 			,true
 		];
 	
+		// Add to available kits
+		(call dzn_zas_kitGetAvailableKits) pushBack _curKit;
 		(group player) setVariable [
 			"dzn_zas_availableKits"
-			, (call dzn_zas_kitGetAvailableKits) pushBack _kit
+			,(call dzn_zas_kitGetAvailableKits)
 			,true
 		];
 	};
