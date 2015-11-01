@@ -2,6 +2,13 @@
 // 	DZN Zeus Asset
 // *********************************
 // Run local on each client/server
+//
+//	Zeus Rally Point
+// Stick players to Rally point object.
+//
+//	Zeus Kits
+// Add Kits of gear as action of object
+//
 // *********************************
 if !(hasInterface) exitWith {};
 
