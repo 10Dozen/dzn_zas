@@ -2,6 +2,5 @@
 #### Zeus Asset
 ##### Version: 0.1
 
-### Zeus Rally Point
-
-### Zeus Kits
+- Zeus Rally Point
+- Zeus Kits
