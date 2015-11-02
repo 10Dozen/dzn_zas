@@ -16,7 +16,8 @@ dzn_zas_zrpMoveToRP = {
 	_this setVelocity [0,0,0];
 	_this setPosASL (getPosASL zrp);
 	_this allowDamage true;
-	_this setVariable ["dzn_zas_isDeployed", false, true];
+	_this call dzn_zas_zrpUndeploy;
+	
 	hint "Do not leave Rally Point!\nZeus will move you to your squad";
 	
 	sleep 2;
@@ -40,6 +41,11 @@ dzn_zas_zrpDeploy = {
 	_this setVariable ["dzn_zas_isDeployed", true, true];
 };
 
+dzn_zas_zrpUndeploy = {
+	// @unit call dzn_zas_zrpUndeploy
+	_this setVariable ["dzn_zas_isDeployed", false, true];
+};
+
 
 // Diary Controls
 dzn_zas_zrpCreateRPMarker = {
@@ -61,7 +67,7 @@ dzn_zas_zrpDeployOption = {
 		// Deploy All
 		if (toLower(_action) == "deploy") then {
 			{
-				if !(_x in allCurators) then {_x spawn dzn_zas_zrpMoveToRP;};
+				if !(_x in allCurators) then {_x call dzn_zas_zrpUndeploy;};
 			} forEach BIS_fnc_listPlayers;
 		} else {
 			{
