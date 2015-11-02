@@ -159,7 +159,24 @@ dzn_zas_kitShowCurrentKits = {
 	hint parseText composeText _msg;
 };
 
-dzn_zas_kitRemoveAllKits = {};
+dzn_zas_kitRemoveAllKitsPlayerSide = {
+	{
+		removeAllActions _x;
+	} forEach dzn_zas_kitBoxes;
+};
+
+dzn_zas_kitRemoveAllKits = {
+	{
+		if (leader (grpoup player) == player) then {
+			(group player) setVariable ["dzn_zas_availableKits", [], true];
+			(group player) setVariable ["dzn_zas_groupKits", [], true];
+		};
+		// Here we should trigger something, that will clear all actions from box.
+	} forEach (call BIS_fnc_listPlayers);
+	
+	hint "All Kits was removed from zKitBoxes.";
+};
+
 dzn_zas_kitAssignDefaultToSinglePlayer = {};
 dzn_zas_kitAssignDefaultToAllPlayers = {};
 dzn_zas_kitShowQuantity = {};
