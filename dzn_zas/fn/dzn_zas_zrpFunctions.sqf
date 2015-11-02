@@ -70,11 +70,11 @@ dzn_zas_zrpUndeployAllPlayers = {
 
 dzn_zas_zrpDeploySinglePlayer = {
 	"Deploy" call dzn_zas_zrpConstrucPlayerMenu;
-	showCommandingMenu "#USER:dzn_zas_zrpPlayeMenu";
+	showCommandingMenu "#USER:dzn_zas_zrpPlayersMenu";
 };
 dzn_zas_zrpUndeploySinglePlayer = {
 	"Undeploy" call dzn_zas_zrpConstrucPlayerMenu;
-	showCommandingMenu "#USER:dzn_zas_zrpPlayeMenu";
+	showCommandingMenu "#USER:dzn_zas_zrpPlayersMenu";
 };
 
 dzn_zas_zrpConstrucPlayerMenu = {
@@ -90,10 +90,10 @@ dzn_zas_zrpConstrucPlayerMenu = {
 		_label = "Undeploy player";
 		_fnc = "dzn_zas_zrpUndeploy";
 	};
-	dzn_zas_zrpPlayeMenu = [ [_label, false] ];
+	dzn_zas_zrpPlayersMenu = [ [_label, false] ];
 	{
 		if NOT_ZEUS then {
-			dzn_zas_zrpPlayeMenu pushBack [
+			dzn_zas_zrpPlayersMenu pushBack [
 				name _x
 				, []
 				, ""
@@ -105,7 +105,7 @@ dzn_zas_zrpConstrucPlayerMenu = {
 		};
 	} forEach (call BIS_fnc_listPlayers);
 	
-	dzn_zas_zrpPlayeMenu
+	dzn_zas_zrpPlayersMenu
 };
 
 dzn_zas_zrpAddDiaryActions = {
