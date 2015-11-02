@@ -146,6 +146,19 @@ dzn_zas_kitAssign = {
 // Diary functions
 #define	NOT_ZEUS(ID)	!(ID in allCurators)
 
+dzn_zas_kitShowCurrentKits = {};
+dzn_zas_kitRemoveAllKits = {};
+dzn_zas_kitAssignDefaultToSinglePlayer = {};
+dzn_zas_kitAssignDefaultToAllPlayers = {};
+dzn_zas_kitShowQuantity = {};
+dzn_zas_kitAddOne = {};
+dzn_zas_kitRemoveOne = {}
+dzn_zas_kitRemoveTotal = {};
+dzn_zas_kitAssignToSinglePlayer = {};
+dzn_zas_kitAssignToAllPlayers = {};
+
+
+
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
 	private["_record"];
@@ -154,34 +167,12 @@ dzn_zas_kitAddDiaryActions = {
 	{
 		// [@Display, @Kit, @Count]
 		_record = _record + format[
-			"%1 kit [?] [+] [-] [Remove] [Assign] [Assign To All]"
+			"<br />%3 kit [%1<execute expression=''>?</execute>%2] [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign</execute>%2] [%1<execute expression=''>Assign To All</execute>%2]"
+			, "<font color='#A0DB65'>"
+			, "</font>"
 			, _x select 0
 		];
 	} forEach dzn_zas_kitList;
 	
 	player createDiaryRecord ["Diary", ["Zeus Kits",_record]];
 };
-
-/*
-dzn_zas_zrpAddDiaryActions = {
-	if NOT_ZEUS(player) exitWith {};
-	call dzn_zas_zrpCreateRPMarker;
-	player createDiaryRecord [
-		"Diary", 
-		[
-			"Zeus Kits", 
-			"<font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font>
-			<br />-------------------------------------
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font>
-			
-			
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Remove All Kits</execute></font>
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeploySinglePlayer;'>Set Default Kit for All Players</execute></font>
-			<br />-------------------------------------
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeployAllPlayers;'>Move All Players To RallyPoint</execute></font>
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeploySinglePlayer;'>Move Single Player To RallyPoint</execute></font>
-			"
-		]
-	];
-};
-*/
