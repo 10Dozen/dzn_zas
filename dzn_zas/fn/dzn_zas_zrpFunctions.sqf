@@ -48,7 +48,7 @@ dzn_zas_zrpUndeploy = {
 
 
 // Diary Controls
-#define	NOT_ZEUS	!(_x in allCurators)
+#define	NOT_ZEUS(ID)	!(ID in allCurators)
 dzn_zas_zrpCreateRPMarker = {
 	private["_mrk"];
 	_mrk = createMarkerLocal ["mrk_zrp", getPosASL zrp];
@@ -60,12 +60,12 @@ dzn_zas_zrpCreateRPMarker = {
 
 dzn_zas_zrpDeployAllPlayers = {
 	{
-		if NOT_ZEUS then {_x call dzn_zas_zrpDeploy;};
+		if NOT_ZEUS(_x) then {_x call dzn_zas_zrpDeploy;};
 	} forEach (call BIS_fnc_listPlayers);
 };
 dzn_zas_zrpUndeployAllPlayers = {
 	{
-		if NOT_ZEUS then {_x call dzn_zas_zrpUndeploy;};
+		if NOT_ZEUS(_x) then {_x call dzn_zas_zrpUndeploy;};
 	} forEach (call BIS_fnc_listPlayers);
 };
 
@@ -93,7 +93,7 @@ dzn_zas_zrpConstrucPlayerMenu = {
 	};
 	dzn_zas_zrpPlayersMenu = [ [_label, false] ];
 	{
-		if NOT_ZEUS then {
+		if NOT_ZEUS(_x) then {
 			dzn_zas_zrpPlayersMenu pushBack [
 				name _x
 				, []
@@ -110,7 +110,7 @@ dzn_zas_zrpConstrucPlayerMenu = {
 };
 
 dzn_zas_zrpAddDiaryActions = {
-	if !(player in allCurators) exitWith {};
+	if NOT_ZEUS(player) exitWith {};
 	call dzn_zas_zrpCreateRPMarker;
 	player createDiaryRecord [
 		"Diary", 
