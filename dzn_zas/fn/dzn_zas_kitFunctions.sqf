@@ -145,7 +145,7 @@ dzn_zas_kitAssign = {
 
 // Diary functions
 #define	NOT_ZEUS(ID)	!(ID in allCurators)
-
+/*
 dzn_zas_zrpAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
 	call dzn_zas_zrpCreateRPMarker;
@@ -164,3 +164,4 @@ dzn_zas_zrpAddDiaryActions = {
 		]
 	];
 };
+*/
