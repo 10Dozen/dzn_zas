@@ -146,7 +146,19 @@ dzn_zas_kitAssign = {
 // Diary functions
 #define	NOT_ZEUS(ID)	!(ID in allCurators)
 
-dzn_zas_kitShowCurrentKits = {};
+dzn_zas_kitShowCurrentKits = {
+	private["_msg"];
+	_msg = ["<t align='center' color='#AACC00' size='1.4'>Zeus Kits</t><br />"];
+	{
+		_msg pushBack format [
+			"<br /><t align='left'>%2x</t><t color='#AACC00' align='right'>KITNAME</t>"
+			, _x select 0
+			, _x select 2
+		];
+	} forEach dzn_zas_kitList;
+	hint parseText composeText _msg;
+};
+
 dzn_zas_kitRemoveAllKits = {};
 dzn_zas_kitAssignDefaultToSinglePlayer = {};
 dzn_zas_kitAssignDefaultToAllPlayers = {};
@@ -162,7 +174,8 @@ dzn_zas_kitAssignToAllPlayers = {};
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
 	private["_record"];
-	_record = "<font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font><br />-------------------------------------";
+	
+	_record = "<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font><br />-------------------------------------";
 	
 	{
 		// [@Display, @Kit, @Count]
