@@ -10,7 +10,6 @@
 // Add Kits of gear as action of object
 //
 // *********************************
-if !(hasInterface) exitWith {};
 
 // ******************************
 // Properties
