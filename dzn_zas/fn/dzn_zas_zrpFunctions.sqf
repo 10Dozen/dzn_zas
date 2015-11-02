@@ -48,7 +48,7 @@ dzn_zas_zrpUndeploy = {
 
 
 // Diary Controls
-#define	NOT_ZEUS(ID)	!(ID in allCurators)
+#define	NOT_ZEUS(ID)	!(ID in dzn_zas_zeuses)
 dzn_zas_zrpCreateRPMarker = {
 	private["_mrk"];
 	_mrk = createMarkerLocal ["mrk_zrp", getPosASL zrp];
@@ -58,38 +58,87 @@ dzn_zas_zrpCreateRPMarker = {
 	_mrk setMarkerTextLocal "zRallyPoint";
 };
 
+dzn_zas_zrpShowNotif = {
+	// @Option call dzn_zas_zrpShowNotif
+	private["_label","_type","_name"];
+	_type = "";
+	_name = "";
+	if (typename _this == "ARRAY") then {
+		_type = _this select 0;
+		_name = _this select 1;
+	} else {
+		_type = _this;
+	};
+	
+	_label = switch toLower(_type) do {
+		case "deployall": { "All players were <t color='#AACC00'>deployed</t>" };
+		case "undeployall": { "All players were <t color='#AACC00'>undeployed</t>" };
+		case "deploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>deployed</t>",_name] };
+		case "undeploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>undeployed</t>",_name] };
+	};
+	
+	hint parseText format [
+		"<t align='center' color='#AACC00' size='1.4'>Zeus RallyPoint</t><br /><br />%1!"
+		, _label
+	];		
+};
+
 dzn_zas_zrpDeployAllPlayers = {
 	{
 		if NOT_ZEUS(_x) then {_x call dzn_zas_zrpDeploy;};
 	} forEach (call BIS_fnc_listPlayers);
+	"deployall" call dzn_zas_zrpShowNotif;
 };
 dzn_zas_zrpUndeployAllPlayers = {
 	{
 		if NOT_ZEUS(_x) then {_x call dzn_zas_zrpUndeploy;};
 	} forEach (call BIS_fnc_listPlayers);
+	"undeployall" call dzn_zas_zrpShowNotif;
 };
 
 dzn_zas_zrpDeploySinglePlayer = {
 	"Deploy" call dzn_zas_zrpConstrucPlayerMenu;
 	showCommandingMenu "#USER:dzn_zas_zrpPlayersMenu";
 };
+
 dzn_zas_zrpUndeploySinglePlayer = {
 	"Undeploy" call dzn_zas_zrpConstrucPlayerMenu;
 	showCommandingMenu "#USER:dzn_zas_zrpPlayersMenu";
 };
 
+dzn_zas_zrpProcessUnit = {
+	// [@PlayerName, @Deploy/Undeploy] call dzn_zas_zrpProcessUnit
+	params["_name", "_opt"];
+	private["_unit"];
+	
+	_unit = objNull;
+	{
+		if (name _x == _name) exitWith { _unit = _x };
+	} forEach (call BIS_fnc_listPlayers);
+	if (isNull _unit) exitWith {};
+	
+	if (toLower(_opt) == "deploy") then {
+		_unit call dzn_zas_zrpDeploy;
+	} else {
+		_unit call dzn_zas_zrpUndeploy;
+	};	
+};
+
 dzn_zas_zrpConstrucPlayerMenu = {
 	// @Menu = @Option call dzn_zas_zrpConstrucPlayerMenu
-	private["_menu","_label","_fnc"];
+	private["_menu","_label","_fnc","_notif"];
 	
 	_label = "";
 	_fnc = "";
+	_notif = "";
 	if (toLower(_this) == "deploy") then { 
 		_label = "Deploy player";
-		_fnc = "dzn_zas_zrpDeploy";
+		_fnc = "deploy";
+		_notif = "deploysingle";
 	} else { 
 		_label = "Undeploy player";
-		_fnc = "dzn_zas_zrpUndeploy";
+		_fnc = "undeploy";
+		_notif = "undeploysingle";
 	};
 	dzn_zas_zrpPlayersMenu = [ [_label, false] ];
 	{
@@ -99,7 +148,12 @@ dzn_zas_zrpConstrucPlayerMenu = {
 				, []
 				, ""
 				, -5
-				,[["expression", format ["%1 call %2;", _x, dzn_zas_zrpUndeploy] ]]
+				,[
+					[
+						"expression"
+						, format ["['%1','%2'] call dzn_zas_zrpProcessUnit; ['%3','%1'] call dzn_zas_zrpShowNotif", name _x, _fnc, _notif] 
+					]
+				]
 				,"1"
 				,"1"
 			];
@@ -113,7 +167,7 @@ dzn_zas_zrpAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
 	call dzn_zas_zrpCreateRPMarker;
 	player createDiaryRecord [
-		"Diary", 
+		"dzn_zas_page", 
 		[
 			"Zeus RallyPoint", 
 			"<marker name='mrk_zrp'>RallyPoint</marker>
