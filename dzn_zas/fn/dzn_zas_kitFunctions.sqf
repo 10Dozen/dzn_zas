@@ -1,4 +1,30 @@
 #define	DEBUG		false
+#define	NOT_ZEUS(ID)	!(ID in dzn_zas_zeuses)
+
+dzn_zas_kitInit = {
+	// Initialization of zeus kit
+	if (isNil "dzn_zas_kitDirtyReinit" && isNil "dzn_zas_kitReinit" && isNil "dzn_zas_kitReassign") then {
+		{
+			call compile format ["%1 = false; publicVariable '%1'", _x];
+		} forEach ["dzn_zas_kitDirtyReinit","dzn_zas_kitReinit","dzn_zas_kitReassign"];	
+	};
+	
+	"dzn_zas_kitDirtyReinit" addPublicVariableEventHandler {
+		hint "dirty reinit"
+	};
+	
+	"dzn_zas_kitReinit" addPublicVariableEventHandler {
+		hint "reinit"
+	};
+	
+	"dzn_zas_kitReassign" addPublicVariableEventHandler {
+		hint "reassign"
+	};
+	
+	call dzn_zas_kitInitList;
+	call dzn_zas_kitSetActions;
+};
+
 
 dzn_zas_kitInitList = {
 	// call dzn_zas_kitInitList
@@ -144,20 +170,21 @@ dzn_zas_kitAssign = {
 
 
 // Diary functions
-#define	NOT_ZEUS(ID)	!(ID in allCurators)
+
 
 dzn_zas_kitShowCurrentKits = {
 	private["_msg"];
 	_msg = ["<t align='center' color='#AACC00' size='1.4'>Zeus Kits</t><br />"];
 	{
 		_msg pushBack format [
-			"<br /><t align='left'>%2x</t><t color='#AACC00' align='right'>KITNAME</t>"
+			"<br /><t align='left'>%2x</t><t color='#AACC00' align='right'>%1</t>"
 			, _x select 0
 			, _x select 2
 		];
 	} forEach dzn_zas_kitList;
-	hint parseText composeText _msg;
+	hint parseText str(composeText _msg);
 };
+
 
 dzn_zas_kitRemoveAllKitsPlayerSide = {
 	{
@@ -167,7 +194,7 @@ dzn_zas_kitRemoveAllKitsPlayerSide = {
 
 dzn_zas_kitRemoveAllKits = {
 	{
-		if (leader (grpoup player) == player) then {
+		if (leader (group player) == player) then {
 			(group player) setVariable ["dzn_zas_availableKits", [], true];
 			(group player) setVariable ["dzn_zas_groupKits", [], true];
 		};
@@ -177,11 +204,13 @@ dzn_zas_kitRemoveAllKits = {
 	hint "All Kits was removed from zKitBoxes.";
 };
 
+
+
 dzn_zas_kitAssignDefaultToSinglePlayer = {};
 dzn_zas_kitAssignDefaultToAllPlayers = {};
 dzn_zas_kitShowQuantity = {};
 dzn_zas_kitAddOne = {};
-dzn_zas_kitRemoveOne = {}
+dzn_zas_kitRemoveOne = {};
 dzn_zas_kitRemoveTotal = {};
 dzn_zas_kitAssignToSinglePlayer = {};
 dzn_zas_kitAssignToAllPlayers = {};
@@ -190,13 +219,17 @@ dzn_zas_kitAssignToAllPlayers = {};
 
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
-	private["_record"];
+	private["_record","_records"];
 	
-	_record = "<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font><br />-------------------------------------";
+	_records = [
+		"<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
+		,"<br />-------------------------------------"
+		,"<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
+	];
 	
 	{
 		// [@Display, @Kit, @Count]
-		_record = _record + format[
+		_records pushBack format[
 			"<br />%3 kit [%1<execute expression=''>?</execute>%2] [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign</execute>%2] [%1<execute expression=''>Assign To All</execute>%2]"
 			, "<font color='#A0DB65'>"
 			, "</font>"
@@ -204,5 +237,10 @@ dzn_zas_kitAddDiaryActions = {
 		];
 	} forEach dzn_zas_kitList;
 	
-	player createDiaryRecord ["Diary", ["Zeus Kits",_record]];
+	_record = "";
+	{
+		_record = format["%1%2",_record,_x];
+	} forEach _records;
+	
+	player createDiaryRecord ["dzn_zas_page", ["Zeus Kits", _record]];
 };
