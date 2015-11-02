@@ -43,6 +43,39 @@ dzn_zas_zrpDeploy = {
 
 // Diary Controls
 // allCurators
+dzn_zas_zrpDeployOption = {
+	// [@Action, @Option]  call dzn_zas_zrpDeployOption
+	// 0:	"Deploy", "Undeploy"
+	// 1:	"All", "Single"
+	params["_action","_option"];
+	
+	
+	if (toLower(_option) == "all") then {
+		// Deploy All
+		if (toLower(_action) == "deploy") then {
+			{
+				if !(_x in allCurators) then {_x spawn dzn_zas_zrpMoveToRP;};
+			} forEach BIS_fnc_listPlayers;
+		} else {
+			{
+				if !(_x in allCurators) then {_x call dzn_zas_zrpDeploy;};
+			} forEach BIS_fnc_listPlayers;
+		};
+	} else {
+		// Deploy single unit
+	
+	};
+};
+
+dzn_zas_zrpDeployAllPlayers = {
+	["Deploy", "All"] call dzn_zas_zrpDeployOption;
+};
+dzn_zas_zrpUndeployAllPlayers = {
+	["Undeploy", "All"] call dzn_zas_zrpDeployOption;
+};
+
+dzn_zas_zrpDeploySinglePlayer = {};
+dzn_zas_zrpUndeploySinglePlayer = {};
 
 dzn_zas_zrpAddDiaryActions = {
 	if !(player in allCurators) exitWith {};
