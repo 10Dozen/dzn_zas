@@ -10,11 +10,11 @@
 // Add Kits of gear as action of object
 //
 // *********************************
-if !(hasInterface) exitWith {};
 
 // ******************************
 // Properties
 // ******************************
+dzn_zas_zeuses			=	[zeusUnit];	//list of playable curator units
 dzn_zas_allowZeusRallyPoint 	=	true;
 dzn_zas_allowZeusKits		=	true;
 
@@ -42,9 +42,14 @@ ISALLOWEDCLOSE
 // ********************************
 // Initializing
 // ********************************
+if (player in dzn_zas_zeuses) then {
+	player createDiarySubject ["dzn_zas_page","ZAS"];
+};
 if (dzn_zas_allowZeusRallyPoint) then {
 	call compile preProcessFileLineNumbers "dzn_zas\fn\dzn_zas_zrpFunctions.sqf";
 	[] execFSM "dzn_zas\FSMs\dzn_zas_zrpLoop.fsm";
+	
+	call dzn_zas_zrpAddDiaryActions;
 };
 
 if (dzn_zas_allowZeusKits) then {

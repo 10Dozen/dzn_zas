@@ -1,6 +1,6 @@
 # dzn_zas
 #### Zeus Asset
-##### Version: 0.1
+##### Version: 0.11
 
-- Zeus Rally Point
+- Zeus Rally Point (v.0.15)
 - Zeus Kits
