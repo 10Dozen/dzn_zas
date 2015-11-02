@@ -48,6 +48,7 @@ dzn_zas_zrpUndeploy = {
 
 
 // Diary Controls
+#define	NOT_ZEUS	!(_x in allCurators)
 dzn_zas_zrpCreateRPMarker = {
 	_mrk = createMarkerLocal ["mrk_zrp", getPosASL zrp];
 	_mrk setMarkerShapeLocal 'ICON';
@@ -58,46 +59,53 @@ dzn_zas_zrpCreateRPMarker = {
 
 dzn_zas_zrpDeployAllPlayers = {
 	{
-		if !(_x in allCurators) then {_x call dzn_zas_zrpDeploy;};
-	} forEach BIS_fnc_listPlayers;
+		if NOT_ZEUS then {_x call dzn_zas_zrpDeploy;};
+	} forEach (call BIS_fnc_listPlayers);
 };
 dzn_zas_zrpUndeployAllPlayers = {
 	{
-		if !(_x in allCurators) then {_x call dzn_zas_zrpUndeploy;};
-	} forEach BIS_fnc_listPlayers;
+		if NOT_ZEUS then {_x call dzn_zas_zrpUndeploy;};
+	} forEach (call BIS_fnc_listPlayers);
 };
 
-
-dzn_zas_zrpDeploySinglePlayer = {};
-dzn_zas_zrpUndeploySinglePlayer = {};
-
+dzn_zas_zrpDeploySinglePlayer = {
+	"Deploy" call dzn_zas_zrpConstrucPlayerMenu;
+	showCommandingMenu "#USER:dzn_zas_zrpPlayeMenu";
+};
+dzn_zas_zrpUndeploySinglePlayer = {
+	"Undeploy" call dzn_zas_zrpConstrucPlayerMenu;
+	showCommandingMenu "#USER:dzn_zas_zrpPlayeMenu";
+};
 
 dzn_zas_zrpConstrucPlayerMenu = {
 	// @Menu = @Option call dzn_zas_zrpConstrucPlayerMenu
+	private["_menu","_label","_fnc"];
 	
-	
-	/*
-	private["_cashToShare","_menu"];
-	
-	_cashToShare = _this;
-	_menu = [ [format ["Share $%1", _cashToShare], false] ];
+	_label = "";
+	_fnc = "";
+	if (toLower(_this) == "deploy") then { 
+		_label = "Deploy player";
+		_fnc = "dzn_zas_zrpDeploy";
+	} else { 
+		_label = "Undeploy player";
+		_fnc = "dzn_zas_zrpUndeploy";
+	};
+	dzn_zas_zrpPlayeMenu = [ [_label, false] ];
 	{
-		if (side player == side _x /*&& !(player == _x)*/) then {
-			_playersList pushBack _x;
-			_menu pushBack [
+		if NOT_ZEUS then {
+			dzn_zas_zrpPlayeMenu pushBack [
 				name _x
 				, []
 				, ""
 				, -5
-				,[["expression", format ["[%1, %2] call dzn_fnc_market_shareCashMP;", _x, _cashToShare] ]]
+				,[["expression", format ["%1 call %2;", _x, dzn_zas_zrpUndeploy] ]]
 				,"1"
 				,"1"
 			];
 		};
 	} forEach (call BIS_fnc_listPlayers);
 	
-	_menu
-	*/
+	dzn_zas_zrpPlayeMenu
 };
 
 dzn_zas_zrpAddDiaryActions = {
@@ -108,12 +116,12 @@ dzn_zas_zrpAddDiaryActions = {
 		[
 			"Zeus RallyPoint", 
 			"<marker name='mrk_zrp'>RallyPoint</marker>
-			<br />-----------
+			<br />-------------------------------------
 			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Deploy All Players</execute></font>
-			<br />Deploy Single Player
-			<br />
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeploySinglePlayer;'>Deploy Single Player</execute></font>
+			<br />-------------------------------------
 			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeployAllPlayers;'>Move All Players To RallyPoint</execute></font>
-			<br />Move Single Player To RallyPoint
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeploySinglePlayer;'>Move Single Player To RallyPoint</execute></font>
 			"
 		]
 	];
