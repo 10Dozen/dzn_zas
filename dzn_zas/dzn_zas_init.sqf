@@ -45,6 +45,8 @@ ISALLOWEDCLOSE
 if (dzn_zas_allowZeusRallyPoint) then {
 	call compile preProcessFileLineNumbers "dzn_zas\fn\dzn_zas_zrpFunctions.sqf";
 	[] execFSM "dzn_zas\FSMs\dzn_zas_zrpLoop.fsm";
+	
+	call dzn_zas_zrpAddDiaryActions;
 };
 
 if (dzn_zas_allowZeusKits) then {
