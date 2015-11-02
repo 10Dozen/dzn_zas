@@ -52,7 +52,7 @@ if (dzn_zas_allowZeusKits) then {
 	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kitList.sqf";
 	call dzn_zas_kitInitList;
 	call dzn_zas_kitSetActions;
-	// [] spawn FUNCTION
+	call dzn_zas_kitAddDiaryActions;
 };
 
 dzn_zas_initialized = true;
