@@ -147,8 +147,19 @@ dzn_zas_kitAssign = {
 #define	NOT_ZEUS(ID)	!(ID in allCurators)
 
 dzn_zas_kitAddDiaryActions = {
-
-
+	if NOT_ZEUS(player) exitWith {};
+	private["_record"];
+	_record = "<font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font><br />-------------------------------------";
+	
+	{
+		// [@Display, @Kit, @Count]
+		_record = _record + format[
+			"%1 kit [?] [+] [-] [Remove] [Assign] [Assign To All]"
+			, _x select 0
+		];
+	} forEach dzn_zas_kitList;
+	
+	player createDiaryRecord ["Diary", ["Zeus Kits",_record]];
 };
 
 /*
