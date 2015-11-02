@@ -54,7 +54,7 @@ dzn_zas_zrpCreateRPMarker = {
 	_mrk setMarkerShapeLocal 'ICON';
 	_mrk setMarkerTypeLocal 'mil_flag';
 	_mrk setMarkerColorLocal "ColorOrange";
-	_mrk setMarkerText%1 "zRallyPoint";
+	_mrk setMarkerTextLocal "zRallyPoint";
 };
 
 dzn_zas_zrpDeployAllPlayers = {
