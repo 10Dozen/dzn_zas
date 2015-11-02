@@ -145,6 +145,12 @@ dzn_zas_kitAssign = {
 
 // Diary functions
 #define	NOT_ZEUS(ID)	!(ID in allCurators)
+
+dzn_zas_kitAddDiaryActions = {
+
+
+};
+
 /*
 dzn_zas_zrpAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
@@ -152,11 +158,14 @@ dzn_zas_zrpAddDiaryActions = {
 	player createDiaryRecord [
 		"Diary", 
 		[
-			"Zeus RallyPoint", 
-			"<marker name='mrk_zrp'>RallyPoint</marker>
+			"Zeus Kits", 
+			"<font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font>
 			<br />-------------------------------------
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Deploy All Players</execute></font>
-			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeploySinglePlayer;'>Deploy Single Player</execute></font>
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Show kits availability</execute></font>
+			
+			
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Remove All Kits</execute></font>
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeploySinglePlayer;'>Set Default Kit for All Players</execute></font>
 			<br />-------------------------------------
 			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeployAllPlayers;'>Move All Players To RallyPoint</execute></font>
 			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeploySinglePlayer;'>Move Single Player To RallyPoint</execute></font>
