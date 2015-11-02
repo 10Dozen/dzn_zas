@@ -67,8 +67,38 @@ dzn_zas_zrpUndeployAllPlayers = {
 	} forEach BIS_fnc_listPlayers;
 };
 
+
 dzn_zas_zrpDeploySinglePlayer = {};
 dzn_zas_zrpUndeploySinglePlayer = {};
+
+
+dzn_zas_zrpConstrucPlayerMenu = {
+	// @Menu = @Option call dzn_zas_zrpConstrucPlayerMenu
+	
+	
+	/*
+	private["_cashToShare","_menu"];
+	
+	_cashToShare = _this;
+	_menu = [ [format ["Share $%1", _cashToShare], false] ];
+	{
+		if (side player == side _x /*&& !(player == _x)*/) then {
+			_playersList pushBack _x;
+			_menu pushBack [
+				name _x
+				, []
+				, ""
+				, -5
+				,[["expression", format ["[%1, %2] call dzn_fnc_market_shareCashMP;", _x, _cashToShare] ]]
+				,"1"
+				,"1"
+			];
+		};
+	} forEach (call BIS_fnc_listPlayers);
+	
+	_menu
+	*/
+};
 
 dzn_zas_zrpAddDiaryActions = {
 	if !(player in allCurators) exitWith {};
