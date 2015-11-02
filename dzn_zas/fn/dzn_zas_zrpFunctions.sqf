@@ -83,20 +83,14 @@ dzn_zas_zrpAddDiaryActions = {
 		"Diary", 
 		[
 			"Zeus RallyPoint", 
+			"<marker name='respawn_west'>RallyPoint</marker>
+			<br />-----------
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Deploy All Players</execute></font>
+			<br />Deploy Single Player
+			<br />
+			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpUndeployAllPlayers;'>Move All Players To RallyPoint</execute></font>
+			<br />Move Single Player To RallyPoint
 			"
-			
-			RallyPoint
-			<br/>-----------
-			<br/>Deploy All Players
-			<br/>Deploy Single Player
-			<br/>
-			<br/>Move All Players To RallyPoint
-			<br/>Move Single Player To RallyPoint
-			
-			
-			
-			<font color='#A0DB65'><execute expression='[] call dzn_fnc_addViewDistance;'>INCREASE VIEW DISTANCE</execute>
-	<br /><br /><execute expression='[] call dzn_fnc_reduceViewDistance;'>DECREASE VIEW DISTANCE</execute></font>"
 		]
 	];
 };
