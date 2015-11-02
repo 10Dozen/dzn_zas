@@ -50,9 +50,10 @@ dzn_zas_zrpUndeploy = {
 // Diary Controls
 #define	NOT_ZEUS	!(_x in allCurators)
 dzn_zas_zrpCreateRPMarker = {
+	private["_mrk"];
 	_mrk = createMarkerLocal ["mrk_zrp", getPosASL zrp];
-	_mrk setMarkerShapeLocal 'ICON';
-	_mrk setMarkerTypeLocal 'mil_flag';
+	_mrk setMarkerShapeLocal "ICON";
+	_mrk setMarkerTypeLocal "mil_flag";
 	_mrk setMarkerColorLocal "ColorOrange";
 	_mrk setMarkerTextLocal "zRallyPoint";
 };
