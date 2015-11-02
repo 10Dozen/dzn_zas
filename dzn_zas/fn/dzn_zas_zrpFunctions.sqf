@@ -42,7 +42,14 @@ dzn_zas_zrpDeploy = {
 
 
 // Diary Controls
-// allCurators
+dzn_zas_zrpCreateRPMarker = {
+	_mrk = createMarkerLocal ["mrk_zrp", getPosASL zrp];
+	_mrk setMarkerShapeLocal 'ICON';
+	_mrk setMarkerTypeLocal 'mil_flag';
+	_mrk setMarkerColorLocal "ColorOrange";
+	_mrk setMarkerText%1 "zRallyPoint";
+};
+
 dzn_zas_zrpDeployOption = {
 	// [@Action, @Option]  call dzn_zas_zrpDeployOption
 	// 0:	"Deploy", "Undeploy"
@@ -79,11 +86,12 @@ dzn_zas_zrpUndeploySinglePlayer = {};
 
 dzn_zas_zrpAddDiaryActions = {
 	if !(player in allCurators) exitWith {};
+	call dzn_zas_zrpCreateRPMarker;
 	player createDiaryRecord [
 		"Diary", 
 		[
 			"Zeus RallyPoint", 
-			"<marker name='respawn_west'>RallyPoint</marker>
+			"<marker name='mrk_zrp'>RallyPoint</marker>
 			<br />-----------
 			<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_zrpDeployAllPlayers;'>Deploy All Players</execute></font>
 			<br />Deploy Single Player
