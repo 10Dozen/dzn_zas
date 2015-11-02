@@ -56,35 +56,15 @@ dzn_zas_zrpCreateRPMarker = {
 	_mrk setMarkerText%1 "zRallyPoint";
 };
 
-dzn_zas_zrpDeployOption = {
-	// [@Action, @Option]  call dzn_zas_zrpDeployOption
-	// 0:	"Deploy", "Undeploy"
-	// 1:	"All", "Single"
-	params["_action","_option"];
-	
-	
-	if (toLower(_option) == "all") then {
-		// Deploy All
-		if (toLower(_action) == "deploy") then {
-			{
-				if !(_x in allCurators) then {_x call dzn_zas_zrpUndeploy;};
-			} forEach BIS_fnc_listPlayers;
-		} else {
-			{
-				if !(_x in allCurators) then {_x call dzn_zas_zrpDeploy;};
-			} forEach BIS_fnc_listPlayers;
-		};
-	} else {
-		// Deploy single unit
-	
-	};
-};
-
 dzn_zas_zrpDeployAllPlayers = {
-	["Deploy", "All"] call dzn_zas_zrpDeployOption;
+	{
+		if !(_x in allCurators) then {_x call dzn_zas_zrpDeploy;};
+	} forEach BIS_fnc_listPlayers;
 };
 dzn_zas_zrpUndeployAllPlayers = {
-	["Undeploy", "All"] call dzn_zas_zrpDeployOption;
+	{
+		if !(_x in allCurators) then {_x call dzn_zas_zrpUndeploy;};
+	} forEach BIS_fnc_listPlayers;
 };
 
 dzn_zas_zrpDeploySinglePlayer = {};
