@@ -39,3 +39,31 @@ dzn_zas_zrpDeploy = {
 	// @Unit call dzn_zas_zrpDeploy
 	_this setVariable ["dzn_zas_isDeployed", true, true];
 };
+
+
+// Diary Controls
+// allCurators
+
+dzn_zas_zrpAddDiaryActions = {
+	if !(player in allCurators) exitWith {};
+	player createDiaryRecord [
+		"Diary", 
+		[
+			"Zeus RallyPoint", 
+			"
+			
+			RallyPoint
+			<br/>-----------
+			<br/>Deploy All Players
+			<br/>Deploy Single Player
+			<br/>
+			<br/>Move All Players To RallyPoint
+			<br/>Move Single Player To RallyPoint
+			
+			
+			
+			<font color='#A0DB65'><execute expression='[] call dzn_fnc_addViewDistance;'>INCREASE VIEW DISTANCE</execute>
+	<br /><br /><execute expression='[] call dzn_fnc_reduceViewDistance;'>DECREASE VIEW DISTANCE</execute></font>"
+		]
+	];
+};
