@@ -15,13 +15,13 @@ dzn_zas_kitInit = {
 	
 	"dzn_zas_kitReinit" addPublicVariableEventHandler {
 		if (dzn_zas_kitReinit) then { 
-			call dzn_zas_kitRemoveAllKitsPlayerSide;
+			call dzn_zas_kitRemoveAllKitsClient;
 		};
 	};
 	
 	"dzn_zas_kitReassign" addPublicVariableEventHandler {
 		if (dzn_zas_kitReassign) then {
-			call dzn_zas_kitAssignDefaultAllPlayerSide;
+			call dzn_zas_kitAssignDefaultAllPlayerClient;
 		};
 	};
 	
@@ -148,6 +148,7 @@ dzn_zas_kitUpdateKits = {
 	};
 };
 
+// Need to rename to something like - kitAssignOnRespawn
 dzn_zas_kitAssignDefault = {
 	// call dzn_zas_kitAssignDefault
 	private["_kit"];
@@ -213,18 +214,16 @@ dzn_zas_kitShowCurrentKits = {
 };
 
 // Remove All Kits
-dzn_zas_kitRemoveAllKitsPlayerSide = {
-	{
-		removeAllActions _x;
-	} forEach dzn_zas_kitBoxes;
-	dzn_zas_kitReinit = false;
-};
-
 dzn_zas_kitRemoveAllKits = {
+	/*
+		Clear available pool for each group		
+		Turn var TRUE -- Trigger Remove all kits on Clients
+		Show notif	
+	*/
 	{
-		if (leader (group player) == player) then {
-			(group player) setVariable ["dzn_zas_availableKits", [], true];
-			(group player) setVariable ["dzn_zas_groupKits", [], true];
+		if (leader (group _x) == _x) then {
+			(group _x) setVariable ["dzn_zas_availableKits", [], true];
+			(group _x) setVariable ["dzn_zas_groupKits", [], true];
 		};		
 	} forEach (call BIS_fnc_listPlayers);
 	
@@ -234,11 +233,29 @@ dzn_zas_kitRemoveAllKits = {
 	"removeall" call dzn_zas_kitShowNotif;
 };
 
+dzn_zas_kitRemoveAllKitsClient = {
+	/*
+		Clear all actions on boxes
+		Turn var OFF
+	*/
+	{
+		removeAllActions _x;
+	} forEach dzn_zas_kitBoxes;
+	dzn_zas_kitReinit = false;
+};
+
 // Drop players kit to default
 dzn_zas_kitAssignDefaultAllPlayers = {
+	/*
+		Clear available pool for each group
+		Set zeusAssigned to Default kit for each unit
+		Turn var TRUE -- Trigger Reassign on Clients
+		Show notif	
+	*/
 	{
-		if (leader (group player) == player) then {
-			(group player) setVariable ["dzn_zas_availableKits", nil, true];			
+		if (leader (group _x) == _x) then {
+			(group _x) setVariable ["dzn_zas_availableKits", nil, true];
+			(group _x) setVariable ["dzn_zas_groupKits", [], true];
 		};
 		_x setVariable ["dzn_zas_kitZeusAssigned", dzn_zas_kitDefaultOnRespawn, true];		
 	} forEach (call BIS_fnc_listPlayers);
@@ -249,7 +266,14 @@ dzn_zas_kitAssignDefaultAllPlayers = {
 	"reassignalldefault" call dzn_zas_kitShowNotif;
 };
 
-dzn_zas_kitAssignDefaultAllPlayerSide = {
+dzn_zas_kitAssignDefaultAllPlayerClient = {
+	/*
+		Re-initialize available pool (e.g. all items now available, nothing in group)
+		Set current kit == assigned
+		Assign new kit via dzn_gear
+		Nil zeusAssigned
+		Turn var FALSE	
+	*/
 	call dzn_zas_kitInitList;
 	
 	player setVariable ["dzn_zas_kitAssigned", player getVariable "dzn_zas_kitZeusAssigned"];
@@ -258,6 +282,67 @@ dzn_zas_kitAssignDefaultAllPlayerSide = {
 	player setVariable ["dzn_zas_kitZeusAssigned", nil];
 	dzn_zas_kitReassign = false;
 };
+
+// Drop player to default kit
+dzn_zas_kitAssignDefatulSinglePlayer = {
+	/*
+		Construct menu (on menu click - client function should be called)
+		Show menu	
+	*/
+	//call dzn_zas_kitConstructPlayerMenu;
+	showCommandingMenu "#USER:dzn_zas_kitPlayersMenu"; 
+};
+
+dzn_zas_kitAssignDefaultSinglePlayerClient = {
+	/*
+		if (CurrentKit != Default) then {
+			Return kit to pool (add to available, remove from group);
+		};
+		assign default kit to player;	
+	*/
+};
+dzn_zas_kitConstructPlayerMenu = {
+	// @Menu = @Option call dzn_zas_kitConstructPlayerMenu
+	private["_menu","_label","_fnc","_notif"];
+	
+	_label = "";
+	_fnc = "";
+	_notif = "";
+	if (toLower(_this) == "deploy") then { 
+		_label = "Deploy player";
+		_fnc = "deploy";
+		_notif = "deploysingle";
+	} else { 
+		_label = "Undeploy player";
+		_fnc = "undeploy";
+		_notif = "undeploysingle";
+	};
+	dzn_zas_zrpPlayersMenu = [ [_label, false] ];
+	{
+		if NOT_ZEUS(_x) then {
+			dzn_zas_zrpPlayersMenu pushBack [
+				name _x
+				, []
+				, ""
+				, -5
+				,[
+					[
+						"expression"
+						, format ["['%1','%2'] call dzn_zas_zrpProcessUnit; ['%3','%1'] call dzn_zas_zrpShowNotif", name _x, _fnc, _notif] 
+					]
+				]
+				,"1"
+				,"1"
+			];
+		};
+	} forEach (call BIS_fnc_listPlayers);
+	
+	dzn_zas_zrpPlayersMenu
+};
+
+
+
+
 
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
