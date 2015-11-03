@@ -20,7 +20,9 @@ dzn_zas_kitInit = {
 	};
 	
 	"dzn_zas_kitReassign" addPublicVariableEventHandler {
-		hint "reassign"
+		if (dzn_zas_kitReassign) then {
+			call dzn_zas_kitAssignDefaultAllPlayerSide;
+		};
 	};
 	
 	call dzn_zas_kitInitList;
@@ -185,6 +187,7 @@ dzn_zas_kitShowNotif = {
 	
 	_label = switch toLower(_type) do {
 		case "removeall": { "All kits were <t color='#AACC00'>removed</t>" };
+		case "reassignalldefault": { "All players were <t color='#AACC00'>assigned to default kit</t>" };
 		/*case "dirtyremoveall": { "All players were <t color='#AACC00'>undeployed</t>" };
 		case "deploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>deployed</t>",_name] };
 		case "undeploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>undeployed</t>",_name] };*/
@@ -209,6 +212,7 @@ dzn_zas_kitShowCurrentKits = {
 	hint parseText str(composeText _msg);
 };
 
+// Remove All Kits
 dzn_zas_kitRemoveAllKitsPlayerSide = {
 	{
 		removeAllActions _x;
@@ -228,6 +232,31 @@ dzn_zas_kitRemoveAllKits = {
 	publicVariable "dzn_zas_kitReinit";
 
 	"removeall" call dzn_zas_kitShowNotif;
+};
+
+// Drop players kit to default
+dzn_zas_kitAssignDefaultAllPlayers = {
+	{
+		if (leader (group player) == player) then {
+			(group player) setVariable ["dzn_zas_availableKits", nil, true];			
+		};
+		_x setVariable ["dzn_zas_kitZeusAssigned", dzn_zas_kitDefaultOnRespawn, true];		
+	} forEach (call BIS_fnc_listPlayers);
+	
+	dzn_zas_kitReassign = true;
+	publicVariable "dzn_zas_kitReassign";
+	
+	"reassignalldefault" call dzn_zas_kitShowNotif;
+};
+
+dzn_zas_kitAssignDefaultAllPlayerSide = {
+	call dzn_zas_kitInitList;
+	
+	player setVariable ["dzn_zas_kitAssigned", player getVariable "dzn_zas_kitZeusAssigned"];
+	[player,  player getVariable "dzn_zas_kitZeusAssigned"] spawn dzn_fnc_gear_assignKit;
+	
+	player setVariable ["dzn_zas_kitZeusAssigned", nil];
+	dzn_zas_kitReassign = false;
 };
 
 dzn_zas_kitAddDiaryActions = {
