@@ -14,7 +14,9 @@ dzn_zas_kitInit = {
 	};
 	
 	"dzn_zas_kitReinit" addPublicVariableEventHandler {
-		hint "reinit"
+		if (dzn_zas_kitReinit) then { 
+			call dzn_zas_kitRemoveAllKitsPlayerSide;
+		};
 	};
 	
 	"dzn_zas_kitReassign" addPublicVariableEventHandler {
@@ -24,7 +26,6 @@ dzn_zas_kitInit = {
 	call dzn_zas_kitInitList;
 	call dzn_zas_kitSetActions;
 };
-
 
 dzn_zas_kitInitList = {
 	// call dzn_zas_kitInitList
@@ -170,7 +171,30 @@ dzn_zas_kitAssign = {
 
 
 // Diary functions
-
+dzn_zas_kitShowNotif = {
+	// @Type or [@Type, @Option] call dzn_zas_kitShowNotif
+	private["_label","_type","_name"];
+	_type = "";
+	_name = "";
+	if (typename _this == "ARRAY") then {
+		_type = _this select 0;
+		_name = _this select 1;
+	} else {
+		_type = _this;
+	};
+	
+	_label = switch toLower(_type) do {
+		case "removeall": { "All kits were <t color='#AACC00'>removed</t>" };
+		/*case "dirtyremoveall": { "All players were <t color='#AACC00'>undeployed</t>" };
+		case "deploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>deployed</t>",_name] };
+		case "undeploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>undeployed</t>",_name] };*/
+	};
+	
+	hint parseText format [
+		"<t align='center' color='#AACC00' size='1.4'>Zeus RallyPoint</t><br /><br />%1!"
+		, _label
+	];	
+};
 
 dzn_zas_kitShowCurrentKits = {
 	private["_msg"];
@@ -185,11 +209,11 @@ dzn_zas_kitShowCurrentKits = {
 	hint parseText str(composeText _msg);
 };
 
-
 dzn_zas_kitRemoveAllKitsPlayerSide = {
 	{
 		removeAllActions _x;
 	} forEach dzn_zas_kitBoxes;
+	dzn_zas_kitReinit = false;
 };
 
 dzn_zas_kitRemoveAllKits = {
@@ -197,34 +221,24 @@ dzn_zas_kitRemoveAllKits = {
 		if (leader (group player) == player) then {
 			(group player) setVariable ["dzn_zas_availableKits", [], true];
 			(group player) setVariable ["dzn_zas_groupKits", [], true];
-		};
-		// Here we should trigger something, that will clear all actions from box.
+		};		
 	} forEach (call BIS_fnc_listPlayers);
 	
-	hint "All Kits was removed from zKitBoxes.";
+	dzn_zas_kitReinit = true;
+	publicVariable "dzn_zas_kitReinit";
+
+	"removeall" call dzn_zas_kitShowNotif;
 };
-
-
-
-dzn_zas_kitAssignDefaultToSinglePlayer = {};
-dzn_zas_kitAssignDefaultToAllPlayers = {};
-dzn_zas_kitShowQuantity = {};
-dzn_zas_kitAddOne = {};
-dzn_zas_kitRemoveOne = {};
-dzn_zas_kitRemoveTotal = {};
-dzn_zas_kitAssignToSinglePlayer = {};
-dzn_zas_kitAssignToAllPlayers = {};
-
-
 
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
 	private["_record","_records"];
 	
 	_records = [
-		"<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
+		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
 		,"<br />-------------------------------------"
-		,"<font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
+		,"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitRemoveAllKits;'>Remove All Kits</execute></font>"
+		,"<br />-------------------------------------"
 	];
 	
 	{
