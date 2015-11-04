@@ -1,0 +1,167 @@
+/*%FSM<COMPILE "D:\GMZ\BI Toolz\FSM Editor Personal Edition\scriptedFSM.cfg, dzn_zas_kitLoop">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start",0,4346,-50.000000,-1175.000000,50.000000,-1125.000000,0.000000,"Start"};
+item1[] = {"true",4,218,-50.000000,-1100.000000,50.000000,-1050.000000,0.000000,"true"};
+item2[] = {"Check",2,250,-50.000000,-1025.000000,50.000000,-975.000000,0.000000,"Check"};
+item3[] = {"Need__Remove_All",4,218,-50.000000,-950.000000,50.000000,-900.000000,3.000000,"Need " \n "Remove All Kits"};
+item4[] = {"Remove_All_Kits",2,250,-50.000000,-875.000000,50.000000,-825.000000,0.000000,"Remove All Kits"};
+item5[] = {"Need_to__change",4,218,75.000000,-950.000000,175.000000,-900.000000,5.000000,"Need to " \n "change kit"};
+item6[] = {"Change_kit",2,250,75.000000,-875.000000,175.000000,-825.000000,0.000000,"Change kit"};
+item7[] = {"true2",4,218,-50.000000,-775.000000,50.000000,-725.000000,0.000000,"true2"};
+item8[] = {"",7,210,245.999985,-754.000000,254.000015,-746.000000,0.000000,""};
+item9[] = {"",7,210,246.000000,-1004.000000,254.000000,-996.000000,0.000000,""};
+item10[] = {"Loop",4,218,-200.000000,-1025.000000,-100.000000,-975.000000,0.000000,"Loop"};
+link0[] = {0,1};
+link1[] = {1,2};
+link2[] = {2,3};
+link3[] = {2,5};
+link4[] = {2,10};
+link5[] = {3,4};
+link6[] = {4,7};
+link7[] = {5,6};
+link8[] = {6,7};
+link9[] = {7,8};
+link10[] = {8,9};
+link11[] = {9,2};
+link12[] = {10,2};
+globals[] = {25.000000,1,0,0,16777215,640,480,1,278,6316128,1,-318.035889,256.423645,-592.570801,-1184.527100,591,609,1};
+window[] = {0,-1,-1,-32000,-32000,979,225,1499,225,1,609};
+*//*%FSM</HEAD>*/
+class FSM
+{
+  fsmName = "dzn_zas_kitLoop";
+  class States
+  {
+    /*%FSM<STATE "Start">*/
+    class Start
+    {
+      name = "Start";
+      init = /*%FSM<STATEINIT""">*/"private[""_timer"",""_debug""];" \n
+       "" \n
+       "_debug = false;" \n
+       "_timer = time + 1;" \n
+       "" \n
+       "if (_debug) then { diag_log ""KIT Init""; };"/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "true">*/
+        class true
+        {
+          priority = 0.000000;
+          to="Check";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"time > 1"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "Check">*/
+    class Check
+    {
+      name = "Check";
+      init = /*%FSM<STATEINIT""">*/"_needToRemoveAllKits = player getVariable [""dzn_zas_kitForceReInit"", false];" \n
+       "_needToSetDefaultKit = !(isNil {player getVariable ""dzn_zas_kitZeusAssigned""});" \n
+       "" \n
+       "if (_debug) then { " \n
+       "	diag_log format [" \n
+       "		""KIT :: RemoveAll: %1 :: ToDefault: %2""" \n
+       "		, _needToRemoveAllKits" \n
+       "		,_needToSetDefaultKit" \n
+       "	];" \n
+       "};" \n
+       "" \n
+       "_timer = time + 4;"/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "Need_to__change">*/
+        class Need_to__change
+        {
+          priority = 5.000000;
+          to="Change_kit";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"time > _timer && { _needToSetDefaultKit }"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "Need__Remove_All">*/
+        class Need__Remove_All
+        {
+          priority = 3.000000;
+          to="Remove_All_Kits";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"time > _timer && { _needToRemoveAllKits }"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "Loop">*/
+        class Loop
+        {
+          priority = 0.000000;
+          to="Check";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"time > _timer"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "Remove_All_Kits">*/
+    class Remove_All_Kits
+    {
+      name = "Remove_All_Kits";
+      init = /*%FSM<STATEINIT""">*/"call dzn_zas_kitRemoveAllKitsClient;" \n
+       "" \n
+       "if (_debug) then {diag_log ""KIT: Remove Kits""; };"/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "true2">*/
+        class true2
+        {
+          priority = 0.000000;
+          to="Check";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "Change_kit">*/
+    class Change_kit
+    {
+      name = "Change_kit";
+      init = /*%FSM<STATEINIT""">*/"call dzn_zas_kitAssignKitClient;" \n
+       "" \n
+       "" \n
+       "if (_debug) then { diag_log ""KIT: Assign kit""; };"/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "true2">*/
+        class true2
+        {
+          priority = 0.000000;
+          to="Check";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+  };
+  initState="Start";
+  finalStates[] =
+  {
+  };
+};
+/*%FSM</COMPILE>*/
