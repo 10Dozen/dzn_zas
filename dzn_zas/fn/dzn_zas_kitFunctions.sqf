@@ -1,34 +1,6 @@
 #define	DEBUG		false
 #define	NOT_ZEUS(ID)	!(ID in dzn_zas_zeuses)
 
-dzn_zas_kitInit = {
-	// Initialization of zeus kit
-	if (isNil "dzn_zas_kitDirtyReinit" && isNil "dzn_zas_kitReinit" && isNil "dzn_zas_kitReassign") then {
-		{
-			call compile format ["%1 = false; publicVariable '%1'", _x];
-		} forEach ["dzn_zas_kitDirtyReinit","dzn_zas_kitReinit","dzn_zas_kitReassign"];	
-	};
-	
-	"dzn_zas_kitDirtyReinit" addPublicVariableEventHandler {
-		hint "dirty reinit"
-	};
-	
-	"dzn_zas_kitReinit" addPublicVariableEventHandler {
-		if (dzn_zas_kitReinit) then { 
-			call dzn_zas_kitRemoveAllKitsClient;
-		};
-	};
-	
-	"dzn_zas_kitReassign" addPublicVariableEventHandler {
-		if (dzn_zas_kitReassign) then {
-			call dzn_zas_kitAssignDefaultAllPlayerClient;
-		};
-	};
-	
-	call dzn_zas_kitInitList;
-	call dzn_zas_kitSetActions;
-};
-
 dzn_zas_kitInitList = {
 	// call dzn_zas_kitInitList
 	private["_grp"];
@@ -111,46 +83,54 @@ dzn_zas_kitUpdateKits = {
 	_grpId = (call dzn_zas_kitGetGroupKits) find _curKit;
 	_avId = (call dzn_zas_kitGetAvailableKits) find _kit;		
 	
-	// Add kit to Group Kits	
-	(call dzn_zas_kitGetGroupKits) pushBack _kit;
-	(group player) setVariable [	
-		"dzn_zas_groupKits"
-		,(call dzn_zas_kitGetGroupKits)
-		,true
-	];
-
-	// Remove kit from Available Kit
-	(call dzn_zas_kitGetAvailableKits) deleteAt _avId;	
-	(group player) setVariable [
-		"dzn_zas_availableKits"
-		,(call dzn_zas_kitGetAvailableKits)
-		,true
-	];
-	
-	// If player not own default, then 
-	// need to return kit to available and remove from group kits
-	if (_curKit != dzn_zas_kitDefaultOnRespawn) then {	
-		// Remove from group kits
-		(call dzn_zas_kitGetGroupKits) deleteAt _grpId;
-		(group player) setVariable [
+	// Add kit to Group Kits (if it there)
+	if (_grpId > -1) then {
+		(call dzn_zas_kitGetGroupKits) pushBack _kit;
+		(group player) setVariable [	
 			"dzn_zas_groupKits"
 			,(call dzn_zas_kitGetGroupKits)
 			,true
 		];
+	};
 	
-		// Add to available kits
-		(call dzn_zas_kitGetAvailableKits) pushBack _curKit;
+	// Remove kit from Available Kit (if it there)
+	if (_avId > -1) then {
+		(call dzn_zas_kitGetAvailableKits) deleteAt _avId;	
 		(group player) setVariable [
 			"dzn_zas_availableKits"
 			,(call dzn_zas_kitGetAvailableKits)
 			,true
 		];
 	};
+	
+	// If player not own default, then 
+	// need to return kit to available and remove from group kits
+	if (_curKit != dzn_zas_kitDefaultOnRespawn) then {	
+		// Remove from group kits
+		if (_grpId > -1) then {
+			(call dzn_zas_kitGetGroupKits) deleteAt _grpId;
+			(group player) setVariable [
+				"dzn_zas_groupKits"
+				,(call dzn_zas_kitGetGroupKits)
+				,true
+			];
+		};
+		
+		// Add to available kits
+		if (_avId > -1) then {
+			(call dzn_zas_kitGetAvailableKits) pushBack _curKit;
+			(group player) setVariable [
+				"dzn_zas_availableKits"
+				,(call dzn_zas_kitGetAvailableKits)
+				,true
+			];
+		};
+	};
 };
 
 // Need to rename to something like - kitAssignOnRespawn
-dzn_zas_kitAssignDefault = {
-	// call dzn_zas_kitAssignDefault
+dzn_zas_kitAssignOnRespawn = {
+	// call dzn_zas_kitAssignOnRespawn
 	private["_kit"];
 	
 	_kit = if (isNil {player getVariable "dzn_zas_kitAssigned"}) then {
@@ -188,7 +168,8 @@ dzn_zas_kitShowNotif = {
 	
 	_label = switch toLower(_type) do {
 		case "removeall": { "All kits were <t color='#AACC00'>removed</t>" };
-		case "reassignalldefault": { "All players were <t color='#AACC00'>assigned to default kit</t>" };
+		case "defaultall": { "All players were <t color='#AACC00'>assigned to default kit</t>" };
+		case "specificall": { "All player were <t color='#AACC00'>assigned to specific kit</t>" };
 		/*case "dirtyremoveall": { "All players were <t color='#AACC00'>undeployed</t>" };
 		case "deploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>deployed</t>",_name] };
 		case "undeploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>undeployed</t>",_name] };*/
@@ -200,7 +181,7 @@ dzn_zas_kitShowNotif = {
 	];	
 };
 
-dzn_zas_kitShowCurrentKits = {
+dzn_zas_kitShowKits = {
 	private["_msg"];
 	_msg = ["<t align='center' color='#AACC00' size='1.4'>Zeus Kits</t><br />"];
 	{
@@ -219,17 +200,19 @@ dzn_zas_kitRemoveAllKits = {
 		Clear available pool for each group		
 		Turn var TRUE -- Trigger Remove all kits on Clients
 		Show notif	
-	*/
+	*/	
+	{
+		_x set [2, 0];
+	} forEach dzn_zas_kitList;
+	
+	// For Players
 	{
 		if (leader (group _x) == _x) then {
-			(group _x) setVariable ["dzn_zas_availableKits", [], true];
-			(group _x) setVariable ["dzn_zas_groupKits", [], true];
-		};		
-	} forEach (call BIS_fnc_listPlayers);
+			(group _x) setVariable ["dzn_zas_availableKits", nil, true];
+		};
+		_x setVariable ["dzn_zas_kitForceRemoveAllKits", true, true];
+	} forEach ((call BIS_fnc_listPlayers) + dzn_zas_zeuses);	
 	
-	dzn_zas_kitReinit = true;
-	publicVariable "dzn_zas_kitReinit";
-
 	"removeall" call dzn_zas_kitShowNotif;
 };
 
@@ -241,66 +224,62 @@ dzn_zas_kitRemoveAllKitsClient = {
 	{
 		removeAllActions _x;
 	} forEach dzn_zas_kitBoxes;
-	dzn_zas_kitReinit = false;
+	
+	call dzn_zas_kitInitList;
+	call dzn_zas_kitSetActions;
+	player setVariable ["dzn_zas_kitForceRemoveAllKits", false, true];
 };
 
-// Drop players kit to default
-dzn_zas_kitAssignDefaultAllPlayers = {
-	/*
-		Clear available pool for each group
-		Set zeusAssigned to Default kit for each unit
-		Turn var TRUE -- Trigger Reassign on Clients
-		Show notif	
-	*/
+// Assign kit to all players
+dzn_zas_kitAssignKitToAlllPlayers = {
+	// @Kitname call dzn_zas_kitAssignKitToAlllPlayers
+	private["_kit","_notif"];
+	
+	_kit = "";
+	_notif = "";
+	if (_this == "default") then { 
+		_kit = dzn_zas_kitDefaultOnRespawn;
+		_notif = "defaultall";
+	} else { 
+		_kit = _this;
+		_notif = ["specificall", "Kitname"];
+	};
+	
 	{
 		if (leader (group _x) == _x) then {
 			(group _x) setVariable ["dzn_zas_availableKits", nil, true];
-			(group _x) setVariable ["dzn_zas_groupKits", [], true];
 		};
-		_x setVariable ["dzn_zas_kitZeusAssigned", dzn_zas_kitDefaultOnRespawn, true];		
+		_x setVariable ["dzn_zas_kitZeusAssigned", [_kit, false] , true];		
 	} forEach (call BIS_fnc_listPlayers);
 	
-	dzn_zas_kitReassign = true;
-	publicVariable "dzn_zas_kitReassign";
-	
-	"reassignalldefault" call dzn_zas_kitShowNotif;
+	_notif call dzn_zas_kitShowNotif;
 };
 
-dzn_zas_kitAssignDefaultAllPlayerClient = {
-	/*
-		Re-initialize available pool (e.g. all items now available, nothing in group)
-		Set current kit == assigned
-		Assign new kit via dzn_gear
-		Nil zeusAssigned
-		Turn var FALSE	
-	*/
+dzn_zas_kitAssignKitClient = {
+	// call dzn_zas_kitAssignKitClient
+	private["_kit"];
 	call dzn_zas_kitInitList;
+	_kit = (player getVariable "dzn_zas_kitZeusAssigned") select 0;
+	_isDirty = (player getVariable "dzn_zas_kitZeusAssigned") select 1;
 	
-	player setVariable ["dzn_zas_kitAssigned", player getVariable "dzn_zas_kitZeusAssigned"];
-	[player,  player getVariable "dzn_zas_kitZeusAssigned"] spawn dzn_fnc_gear_assignKit;
-	
-	player setVariable ["dzn_zas_kitZeusAssigned", nil];
-	dzn_zas_kitReassign = false;
+	if (_isDirty) then {
+		_kit spawn dzn_zas_kitAssign;
+	} else {
+		[player, _kit] spawn dzn_fnc_gear_assignKit;
+		player setVariable ["dzn_zas_kitAssigned", _kit];
+	};
+	player setVariable ["dzn_zas_kitZeusAssigned", nil, true];
 };
 
-// Drop player to default kit
-dzn_zas_kitAssignDefatulSinglePlayer = {
-	/*
-		Construct menu (on menu click - client function should be called)
-		Show menu	
-	*/
-	//call dzn_zas_kitConstructPlayerMenu;
-	showCommandingMenu "#USER:dzn_zas_kitPlayersMenu"; 
-};
 
-dzn_zas_kitAssignDefaultSinglePlayerClient = {
-	/*
-		if (CurrentKit != Default) then {
-			Return kit to pool (add to available, remove from group);
-		};
-		assign default kit to player;	
-	*/
-};
+
+
+
+
+
+
+/*
+showCommandingMenu "#USER:dzn_zas_kitPlayersMenu"; 
 dzn_zas_kitConstructPlayerMenu = {
 	// @Menu = @Option call dzn_zas_kitConstructPlayerMenu
 	private["_menu","_label","_fnc","_notif"];
@@ -339,7 +318,7 @@ dzn_zas_kitConstructPlayerMenu = {
 	
 	dzn_zas_zrpPlayersMenu
 };
-
+*/
 
 
 
@@ -349,7 +328,9 @@ dzn_zas_kitAddDiaryActions = {
 	private["_record","_records"];
 	
 	_records = [
-		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowCurrentKits;'>Show All Kits</execute></font>"
+		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowKits;'>Show All Kits</execute></font>"
+		,"<br />-------------------------------------"
+		,"<br /><font color='#A0DB65'><execute expression='""default"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign Default Kit to All Player</execute></font>"
 		,"<br />-------------------------------------"
 		,"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitRemoveAllKits;'>Remove All Kits</execute></font>"
 		,"<br />-------------------------------------"
@@ -358,10 +339,11 @@ dzn_zas_kitAddDiaryActions = {
 	{
 		// [@Display, @Kit, @Count]
 		_records pushBack format[
-			"<br />%3 kit [%1<execute expression=''>?</execute>%2] [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign</execute>%2] [%1<execute expression=''>Assign To All</execute>%2]"
+			"<br />%3 kit [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign to</execute>%2] [%1<execute expression='""%4"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign To All</execute>%2]"
 			, "<font color='#A0DB65'>"
 			, "</font>"
 			, _x select 0
+			, _x select 1
 		];
 	} forEach dzn_zas_kitList;
 	
