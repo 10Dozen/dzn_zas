@@ -57,6 +57,7 @@ if (dzn_zas_allowZeusKits) then {
 	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kitList.sqf";
 	call dzn_zas_kitInitList;
 	call dzn_zas_kitSetActions;
+	[] execFSM "dzn_zas\FSMs\dzn_zas_kitLoop.fsm";
 	call dzn_zas_kitAddDiaryActions;
 };
 
