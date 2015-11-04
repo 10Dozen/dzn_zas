@@ -339,11 +339,12 @@ dzn_zas_kitAddDiaryActions = {
 	{
 		// [@Display, @Kit, @Count]
 		_records pushBack format[
-			"<br />%3 kit [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign to</execute>%2] [%1<execute expression='""%4"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign To All</execute>%2]"
+			"<br /><img image='%5'/>%3 kit [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign to</execute>%2] [%1<execute expression='""%4"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign To All</execute>%2]"
 			, "<font color='#A0DB65'>"
 			, "</font>"
 			, _x select 0
 			, _x select 1
+			, if (!isNil {_x select 3}) then { _x select 3 } else { dzn_zas_defaultKitIcon }
 		];
 	} forEach dzn_zas_kitList;
 	
