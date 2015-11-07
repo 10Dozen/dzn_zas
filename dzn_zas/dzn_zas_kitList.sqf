@@ -10,4 +10,6 @@ dzn_zas_kitList = [
 	,["Rifleman (AT)", "kit_nato_rat",		1]
 	,["AT Specialist", "kit_nato_at",		1]	
 	,["Rifleman", "kit_nato_r",			6]
+	,["Crewman", "kit_nato_crew",			12]
+	,["Helicopter Pilot", "kit_nato_heliPilot", 12]	
 ];

@@ -17,6 +17,7 @@
 dzn_zas_zeuses			=	[zeusUnit];	//list of playable curator units
 dzn_zas_allowZeusRallyPoint 	=	true;
 dzn_zas_allowZeusKits		=	true;
+dzn_zas_allowZeusNotes		=	true;
 
 #define ISALLOWED(X)	if (X) then {
 #define ISALLOWEDCLOSE	};
@@ -39,12 +40,21 @@ dzn_zas_kitDefaultOnRespawn	= "kit_defaultPlayer"; 	// Kit name to assign, "" - 
 
 ISALLOWEDCLOSE
 
+ISALLOWED(dzn_zas_allowZeusNotes)
+
+dzn_zas_znClientUtil		= true;
+dzn_zas_znCAS			= true;
+dzn_zas_znArtilleryControl	= true;
+
+ISALLOWEDCLOSE
+
 // ********************************
 // Initializing
 // ********************************
-if (player in dzn_zas_zeuses) then {
+if (player in dzn_zas_zeuses || dzn_zas_allowZeusNotes) then {
 	player createDiarySubject ["dzn_zas_page","ZAS"];
 };
+
 if (dzn_zas_allowZeusRallyPoint) then {
 	call compile preProcessFileLineNumbers "dzn_zas\fn\dzn_zas_zrpFunctions.sqf";
 	[] execFSM "dzn_zas\FSMs\dzn_zas_zrpLoop.fsm";
@@ -57,7 +67,13 @@ if (dzn_zas_allowZeusKits) then {
 	call compile preProcessFileLineNumbers "dzn_zas\dzn_zas_kitList.sqf";
 	call dzn_zas_kitInitList;
 	call dzn_zas_kitSetActions;
-	// [] spawn FUNCTION
+	[] execFSM "dzn_zas\FSMs\dzn_zas_kitLoop.fsm";
+	call dzn_zas_kitAddDiaryActions;
+};
+
+if (dzn_zas_allowZeusNotes) then {
+	call compile preProcessFileLineNumbers "dzn_zas\fn\dzn_zas_znFunctions.sqf";
+	call dzn_zas_znAddDiaryActions;
 };
 
 dzn_zas_initialized = true;

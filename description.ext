@@ -4,7 +4,7 @@ class Header {
 	maxPlayers = 20;
 };
 
-onLoadName 			= "ZAS 0.1";
+onLoadName 			= "ZAS 0.11";
 author 				  = "10Dozen";
 
 enableDebugConsole = 2;

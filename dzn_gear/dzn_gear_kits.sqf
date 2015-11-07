@@ -120,6 +120,42 @@ kit_nato_tl =
 	["<BACKPACK ITEMS >> ",[]]
 ];
 
+kit_nato_crew = 
+    [
+    ["<EQUIPEMENT >>  ","U_B_CombatUniform_mcam_vest","V_BandollierB_rgr","","H_HelmetCrew_B","G_Aviator"],
+    ["<PRIMARY WEAPON >>  ","arifle_MXC_F","30Rnd_65x39_caseless_mag",["","","",""]],
+    ["<LAUNCHER WEAPON >>  ","","",["","","",""]],
+    ["<HANDGUN WEAPON >>  ","hgun_P07_F","16Rnd_9x21_Mag",["","","",""]],
+    ["<ASSIGNED ITEMS >>  ","ItemMap","ItemCompass","ItemWatch","ItemRadio","NVGoggles"],
+    ["<UNIFORM ITEMS >> ",[["FirstAidKit",1],["PRIMARY MAG",2],["Chemlight_green",1]]],
+    ["<VEST ITEMS >> ",[["PRIMARY MAG",3],["HANDGUN MAG",2],["HandGrenade",2],["SmokeShell",1],["SmokeShellGreen",1],["Chemlight_green",1]]],
+    ["<BACKPACK ITEMS >> ",[]]
+];
+
+kit_nato_pilot =
+    [
+    ["<EQUIPEMENT >>  ","U_B_PilotCoveralls","","B_Parachute","H_PilotHelmetFighter_B","G_Combat"],
+    ["<PRIMARY WEAPON >>  ","SMG_01_Holo_F","30Rnd_45ACP_Mag_SMG_01",["","","optic_Holosight_smg",""]],
+    ["<LAUNCHER WEAPON >>  ","","",["","","",""]],
+    ["<HANDGUN WEAPON >>  ","","",["","","",""]],
+    ["<ASSIGNED ITEMS >>  ","ItemMap","ItemCompass","ItemWatch","ItemRadio","NVGoggles"],
+    ["<UNIFORM ITEMS >> ",[["FirstAidKit",1],["PRIMARY MAG",3],["SmokeShell",1],["SmokeShellBlue",1],["Chemlight_green",1]]],
+    ["<VEST ITEMS >> ",[]],
+    ["<BACKPACK ITEMS >> ",[]]
+];
+
+kit_nato_heliPilot =
+    [
+    ["<EQUIPEMENT >>  ","U_B_HeliPilotCoveralls","V_TacVest_blk","","H_PilotHelmetHeli_B",""],
+    ["<PRIMARY WEAPON >>  ","SMG_01_Holo_F","30Rnd_45ACP_Mag_SMG_01",["","","optic_Holosight_smg",""]],
+    ["<LAUNCHER WEAPON >>  ","","",["","","",""]],
+    ["<HANDGUN WEAPON >>  ","","",["","","",""]],
+    ["<ASSIGNED ITEMS >>  ","ItemMap","ItemCompass","ItemWatch","ItemRadio","NVGoggles"],
+    ["<UNIFORM ITEMS >> ",[["FirstAidKit",1],["PRIMARY MAG",2],["Chemlight_green",1]]],
+    ["<VEST ITEMS >> ",[["PRIMARY MAG",1],["SmokeShellGreen",1],["SmokeShellBlue",1],["SmokeShellOrange",1],["Chemlight_green",1]]],
+    ["<BACKPACK ITEMS >> ",[]]
+];
+
 kit_defaultBox = [
 	[["arifle_MXC_F",8],["arifle_MX_F",8],["hgun_P07_F",5],["launch_NLAW_F",1]],
 	[["30Rnd_65x39_caseless_mag",50],["100Rnd_65x39_caseless_mag",20],["16Rnd_9x21_Mag",20],["1Rnd_HE_Grenade_shell",25],["1Rnd_SmokeBlue_Grenade_shell",2],["1Rnd_SmokeGreen_Grenade_shell",2],["1Rnd_SmokeOrange_Grenade_shell",2],["1Rnd_SmokePurple_Grenade_shell",2],["1Rnd_SmokeRed_Grenade_shell",2],["1Rnd_SmokeYellow_Grenade_shell",2],["1Rnd_Smoke_Grenade_shell",2],["DemoCharge_Remote_Mag",5],["HandGrenade",20],["MiniGrenade",24],["NLAW_F",8],["SatchelCharge_Remote_Mag",5],["SmokeShell",20],["SmokeShellBlue",2],["SmokeShellGreen",2],["SmokeShellOrange",2],["SmokeShellPurple",2],["SmokeShellRed",2],["SmokeShellYellow",2]],
