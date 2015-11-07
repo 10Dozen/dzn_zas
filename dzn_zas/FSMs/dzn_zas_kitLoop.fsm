@@ -25,8 +25,8 @@ link9[] = {7,8};
 link10[] = {8,9};
 link11[] = {9,2};
 link12[] = {10,2};
-globals[] = {25.000000,1,0,0,16777215,640,480,1,278,6316128,1,-318.035889,256.423645,-592.570801,-1184.527100,591,609,1};
-window[] = {0,-1,-1,-32000,-32000,979,225,1499,225,1,609};
+globals[] = {25.000000,1,0,0,16777215,640,480,1,278,6316128,1,-251.938965,322.520569,-594.514648,-1186.470947,591,609,1};
+window[] = {0,-1,-1,-32000,-32000,854,100,1374,100,1,609};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -37,7 +37,7 @@ class FSM
     class Start
     {
       name = "Start";
-      init = /*%FSM<STATEINIT""">*/"private[""_timer"",""_debug""];" \n
+      init = /*%FSM<STATEINIT""">*/"private[""_timer"",""_debug"",""_needToSetKit"",""_needToRemoveAllKits""];" \n
        "" \n
        "_debug = false;" \n
        "_timer = time + 1;" \n
@@ -64,13 +64,13 @@ class FSM
     {
       name = "Check";
       init = /*%FSM<STATEINIT""">*/"_needToRemoveAllKits = player getVariable [""dzn_zas_kitForceReInit"", false];" \n
-       "_needToSetDefaultKit = !(isNil {player getVariable ""dzn_zas_kitZeusAssigned""});" \n
+       "_needToSetKit = !(isNil {player getVariable ""dzn_zas_kitZeusAssigned""});" \n
        "" \n
        "if (_debug) then { " \n
        "	diag_log format [" \n
        "		""KIT :: RemoveAll: %1 :: ToDefault: %2""" \n
        "		, _needToRemoveAllKits" \n
-       "		,_needToSetDefaultKit" \n
+       "		, _needToSetKit" \n
        "	];" \n
        "};" \n
        "" \n
@@ -84,7 +84,7 @@ class FSM
           priority = 5.000000;
           to="Change_kit";
           precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-          condition=/*%FSM<CONDITION""">*/"time > _timer && { _needToSetDefaultKit }"/*%FSM</CONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"time > _timer && { _needToSetKit }"/*%FSM</CONDITION""">*/;
           action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
         };
         /*%FSM</LINK>*/
