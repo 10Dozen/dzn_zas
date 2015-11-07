@@ -7,6 +7,6 @@
 - Zeus Notes (Client Utilities) (v.0.1)
 
 ##### Mission Notes
-<br />_Island_: Altis
+_Island_: Altis
 <br />_Respawn_: Respawn Base
 <br />_Revive_: Arma 3 Revive
