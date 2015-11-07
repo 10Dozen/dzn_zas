@@ -40,6 +40,13 @@ dzn_zas_kitDefaultOnRespawn	= "kit_defaultPlayer"; 	// Kit name to assign, "" - 
 
 ISALLOWEDCLOSE
 
+ISALLOWED(dzn_zas_allowZeusNotes)
+
+dzn_zas_znClientUtil		= true;
+dzn_zas_znCAS			= true;
+dzn_zas_znArtilleryControl	= true;
+
+ISALLOWEDCLOSE
 
 // ********************************
 // Initializing
