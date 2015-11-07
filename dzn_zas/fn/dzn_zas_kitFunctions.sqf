@@ -83,18 +83,15 @@ dzn_zas_kitUpdateKits = {
 	_grpId = (call dzn_zas_kitGetGroupKits) find _curKit;
 	_avId = (call dzn_zas_kitGetAvailableKits) find _kit;		
 	
-	// Add kit to Group Kits (if it there)
-	if (_grpId > -1) then {
+	// Add kit to Group Kits and Remove kit from Available Kit (if it there)
+	if (_avId > -1) then {
 		(call dzn_zas_kitGetGroupKits) pushBack _kit;
 		(group player) setVariable [	
 			"dzn_zas_groupKits"
 			,(call dzn_zas_kitGetGroupKits)
 			,true
-		];
-	};
-	
-	// Remove kit from Available Kit (if it there)
-	if (_avId > -1) then {
+		];		
+		
 		(call dzn_zas_kitGetAvailableKits) deleteAt _avId;	
 		(group player) setVariable [
 			"dzn_zas_availableKits"
@@ -105,27 +102,21 @@ dzn_zas_kitUpdateKits = {
 	
 	// If player not own default, then 
 	// need to return kit to available and remove from group kits
-	if (_curKit != dzn_zas_kitDefaultOnRespawn) then {	
-		// Remove from group kits
-		if (_grpId > -1) then {
-			(call dzn_zas_kitGetGroupKits) deleteAt _grpId;
-			(group player) setVariable [
-				"dzn_zas_groupKits"
-				,(call dzn_zas_kitGetGroupKits)
-				,true
-			];
-		};
-		
-		// Add to available kits
-		if (_avId > -1) then {
-			(call dzn_zas_kitGetAvailableKits) pushBack _curKit;
-			(group player) setVariable [
-				"dzn_zas_availableKits"
-				,(call dzn_zas_kitGetAvailableKits)
-				,true
-			];
-		};
-	};
+	if (_grpId > -1) then {
+		(call dzn_zas_kitGetGroupKits) deleteAt _grpId;
+		(group player) setVariable [
+			"dzn_zas_groupKits"
+			,(call dzn_zas_kitGetGroupKits)
+			,true
+		];
+
+		(call dzn_zas_kitGetAvailableKits) pushBack _curKit;
+		(group player) setVariable [
+			"dzn_zas_availableKits"
+			,(call dzn_zas_kitGetAvailableKits)
+			,true
+		];
+	};	
 };
 
 // Need to rename to something like - kitAssignOnRespawn
@@ -145,9 +136,9 @@ dzn_zas_kitAssignOnRespawn = {
 
 dzn_zas_kitAssign = {
 	// @kit spawn dzn_zas_assignKit	
-	if (_this != dzn_zas_kitDefaultOnRespawn) then {
+	// if (_this != dzn_zas_kitDefaultOnRespawn) then {
 		_this call dzn_zas_kitUpdateKits;	
-	};
+	// };
 	player setVariable ["dzn_zas_kitAssigned", _this];
 	[player, _this] spawn dzn_fnc_gear_assignKit;
 };
@@ -170,6 +161,7 @@ dzn_zas_kitShowNotif = {
 		case "removeall": { "All kits were <t color='#AACC00'>removed</t>" };
 		case "defaultall": { "All players were <t color='#AACC00'>assigned to default kit</t>" };
 		case "specificall": { "All player were <t color='#AACC00'>assigned to specific kit</t>" };
+		case "specificsingle": { "Player was <t color='#AACC00'>assigned to specific kit</t>" };
 		/*case "dirtyremoveall": { "All players were <t color='#AACC00'>undeployed</t>" };
 		case "deploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>deployed</t>",_name] };
 		case "undeploysingle": { format["Player <t color='#AACC00'>%1</t> was <t color='#AACC00'>undeployed</t>",_name] };*/
@@ -271,35 +263,18 @@ dzn_zas_kitAssignKitClient = {
 	player setVariable ["dzn_zas_kitZeusAssigned", nil, true];
 };
 
+dzn_zas_kitAssignKitToSingle = {
+	_this	call dzn_zas_kitConstructPlayerMenu;
+	showCommandingMenu "#USER:dzn_zas_kitPlayersMenu";
+};
 
-
-
-
-
-
-
-/*
-showCommandingMenu "#USER:dzn_zas_kitPlayersMenu"; 
 dzn_zas_kitConstructPlayerMenu = {
-	// @Menu = @Option call dzn_zas_kitConstructPlayerMenu
-	private["_menu","_label","_fnc","_notif"];
+	params["_kit","_label"];
 	
-	_label = "";
-	_fnc = "";
-	_notif = "";
-	if (toLower(_this) == "deploy") then { 
-		_label = "Deploy player";
-		_fnc = "deploy";
-		_notif = "deploysingle";
-	} else { 
-		_label = "Undeploy player";
-		_fnc = "undeploy";
-		_notif = "undeploysingle";
-	};
-	dzn_zas_zrpPlayersMenu = [ [_label, false] ];
+	dzn_zas_kitPlayersMenu = [ [_label, false] ];
 	{
 		if NOT_ZEUS(_x) then {
-			dzn_zas_zrpPlayersMenu pushBack [
+			dzn_zas_kitPlayersMenu pushBack [
 				name _x
 				, []
 				, ""
@@ -307,7 +282,11 @@ dzn_zas_kitConstructPlayerMenu = {
 				,[
 					[
 						"expression"
-						, format ["['%1','%2'] call dzn_zas_zrpProcessUnit; ['%3','%1'] call dzn_zas_zrpShowNotif", name _x, _fnc, _notif] 
+						, format [
+							"['%1','%2'] call dzn_zas_kitProcessUnit; ['specificsingle', '%1'] call dzn_zas_kitShowNotif"
+							, name _x
+							, _kit
+						] 
 					]
 				]
 				,"1"
@@ -315,13 +294,21 @@ dzn_zas_kitConstructPlayerMenu = {
 			];
 		};
 	} forEach (call BIS_fnc_listPlayers);
-	
-	dzn_zas_zrpPlayersMenu
 };
-*/
 
-
-
+dzn_zas_kitProcessUnit = {
+	// [@PlayerName, @Kitname] call dzn_zas_kitProcessUnit
+	params["_name", "_kit"];
+	private["_unit"];
+	
+	_unit = objNull;
+	{
+		if (name _x == _name) exitWith { _unit = _x };
+	} forEach (call BIS_fnc_listPlayers);
+	if (isNull _unit) exitWith {};
+	
+	_unit setVariable ["dzn_zas_kitZeusAssigned", [_kit, true], true];	
+};
 
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
@@ -331,6 +318,7 @@ dzn_zas_kitAddDiaryActions = {
 		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowKits;'>Show All Kits</execute></font>"
 		,"<br />-------------------------------------"
 		,"<br /><font color='#A0DB65'><execute expression='""default"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign Default Kit to All Player</execute></font>"
+		,"<br /><font color='#A0DB65'><execute expression='[dzn_zas_kitDefaultOnRespawn, ""Default Kit""] call dzn_zas_kitAssignKitToSingle;'>Assign Default Kit to Specific Player</execute></font>"
 		,"<br />-------------------------------------"
 		,"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitRemoveAllKits;'>Remove All Kits</execute></font>"
 		,"<br />-------------------------------------"
@@ -339,11 +327,11 @@ dzn_zas_kitAddDiaryActions = {
 	{
 		// [@Display, @Kit, @Count]
 		_records pushBack format[
-			"<br /><img image='%5' width='10' height='10'/>%3 kit [%1<execute expression=''>+</execute>%2] [%1<execute expression=''>-</execute>%2] [%1<execute expression=''>Remove</execute>%2] [%1<execute expression=''>Assign to</execute>%2] [%1<execute expression='""%4"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign To All</execute>%2]"
+			"<br /><img image='%5' width='10' height='10'/>%3 kit [%1<execute expression='[""%4"", ""%3""] call dzn_zas_kitAssignKitToSingle'>Assign to</execute>%2] [%1<execute expression='""%4"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign To All</execute>%2]"
 			, "<font color='#A0DB65'>"
 			, "</font>"
-			, _x select 0
-			, _x select 1
+			, _x select 0 /* 3: Display name */
+			, _x select 1 /* 4: Kit name */
 			, if (!isNil {_x select 3}) then { _x select 3 } else { dzn_zas_defaultKitIcon }
 		];
 	} forEach dzn_zas_kitList;
