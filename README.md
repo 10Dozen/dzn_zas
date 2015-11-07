@@ -3,8 +3,8 @@
 ##### Version: 0.15
 
 - Zeus Rally Point (v.0.15)
-- Zeus Kits (v.0.1)
-- Zeus Notes (Client Utilities) (v.0.1)
+- Zeus Kits (v.0.15)
+- Zeus Notes (v.0.15)
 
 ##### Mission Notes
 _Island_: Altis
