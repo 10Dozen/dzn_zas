@@ -2,5 +2,12 @@
 #### Zeus Asset
 ##### Version: 0.15
 
-- Zeus Rally Point (v.0.15)
-- Zeus Kits (v.0.1)
+- Zeus Rally Point 
+- Zeus Kits
+- Zeus Notes
+
+##### Mission Notes
+
+<br />_Island_: Altis
+<br />_Respawn_: Unlimited, Respawn Base
+<br />_Revive_: Arma 3 Revive
