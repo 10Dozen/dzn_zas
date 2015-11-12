@@ -28,11 +28,11 @@ class Mission
 	randomSeed=5221824;
 	class Intel
 	{
-		briefingName="ZAS 0.11";
-		startWeather=0.29999998;
+		briefingName="ZAS 0.15";
+		startWeather=0.30000001;
 		startWind=0.099999994;
 		startWaves=0.099999994;
-		forecastWeather=0.29999998;
+		forecastWeather=0.30000001;
 		forecastWind=0.099999994;
 		forecastWaves=0.099999994;
 		forecastLightnings=0.099999994;
@@ -46,7 +46,7 @@ class Mission
 	};
 	class Groups
 	{
-		items=4;
+		items=5;
 		class Item0
 		{
 			side="WEST";
@@ -295,14 +295,126 @@ class Mission
 				};
 			};
 		};
+		class Item4
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=10;
+				class Item0
+				{
+					position[]={8448.5361,106.88473,25100.441};
+					special="NONE";
+					id=13;
+					side="WEST";
+					vehicle="B_Soldier_SL_F";
+					player="PLAY CDG";
+					leader=1;
+					rank="SERGEANT";
+					skill=0.60000002;
+				};
+				class Item1
+				{
+					position[]={8455.5752,106.23619,25100.445};
+					special="NONE";
+					id=14;
+					side="WEST";
+					vehicle="B_medic_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item2
+				{
+					position[]={8468.5986,106.7697,25092.176};
+					special="NONE";
+					id=15;
+					side="WEST";
+					vehicle="B_Soldier_TL_F";
+					player="PLAY CDG";
+					rank="CORPORAL";
+					skill=0.60000002;
+				};
+				class Item3
+				{
+					position[]={8468.7744,109.40639,25074.578};
+					special="NONE";
+					id=16;
+					side="WEST";
+					vehicle="B_Soldier_TL_F";
+					player="PLAY CDG";
+					rank="CORPORAL";
+					skill=0.60000002;
+				};
+				class Item4
+				{
+					position[]={8477.9229,107.67665,25092.176};
+					special="NONE";
+					id=17;
+					side="WEST";
+					vehicle="B_soldier_AR_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item5
+				{
+					position[]={8478.0986,109.67274,25074.93};
+					special="NONE";
+					id=18;
+					side="WEST";
+					vehicle="B_soldier_AR_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item6
+				{
+					position[]={8485.1377,108.50236,25094.111};
+					special="NONE";
+					id=19;
+					side="WEST";
+					vehicle="B_Soldier_GL_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item7
+				{
+					position[]={8486.7236,109.82137,25074.402};
+					special="NONE";
+					id=20;
+					side="WEST";
+					vehicle="B_Soldier_GL_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item8
+				{
+					position[]={8496.2236,109.83436,25093.055};
+					special="NONE";
+					id=21;
+					side="WEST";
+					vehicle="B_soldier_LAT_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+				class Item9
+				{
+					position[]={8497.9834,110.79183,25074.93};
+					special="NONE";
+					id=22;
+					side="WEST";
+					vehicle="B_Soldier_A_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+			};
+		};
 	};
 	class Vehicles
 	{
 		items=5;
 		class Item0
 		{
-			position[]={2115.1648,56.961441,22183.457};
-			id=13;
+			position[]={24071.35,11.548388,24021.566};
+			id=23;
 			side="EMPTY";
 			vehicle="Land_HelipadEmpty_F";
 			skill=0.60000002;
@@ -310,36 +422,36 @@ class Mission
 		};
 		class Item1
 		{
-			position[]={2110.1873,55.891628,22182.453};
+			position[]={24066.373,11.471757,24020.563};
 			azimut=225;
-			id=14;
+			id=24;
 			side="EMPTY";
 			vehicle="Land_TentDome_F";
 			skill=0.60000002;
 		};
 		class Item2
 		{
-			position[]={2113.6804,56.569202,22179.111};
+			position[]={24069.865,11.814489,24017.221};
 			azimut=20;
-			id=15;
+			id=25;
 			side="EMPTY";
 			vehicle="Land_TentDome_F";
 			skill=0.60000002;
 		};
 		class Item3
 		{
-			position[]={2112.9968,55.980839,22186.404};
+			position[]={24069.182,11.119617,24024.514};
 			azimut=130;
-			id=16;
+			id=26;
 			side="EMPTY";
 			vehicle="Land_TentDome_F";
 			skill=0.60000002;
 		};
 		class Item4
 		{
-			position[]={2117.4314,57.641823,22182.936};
+			position[]={24073.615,11.706363,24021.045};
 			azimut=130;
-			id=17;
+			id=27;
 			side="EMPTY";
 			vehicle="B_CargoNet_01_ammo_F";
 			skill=0.60000002;
@@ -351,7 +463,7 @@ class Mission
 		items=1;
 		class Item0
 		{
-			position[]={2117.2869,57.433426,22184.279};
+			position[]={24073.471,11.701516,24022.389};
 			name="respawn_west";
 			text="Camp";
 			type="hd_pickup";
