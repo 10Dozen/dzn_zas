@@ -192,7 +192,9 @@ dzn_zas_kitRemoveAllKits = {
 		Clear available pool for each group		
 		Turn var TRUE -- Trigger Remove all kits on Clients
 		Show notif	
-	*/	
+	*/
+	
+	
 	{
 		_x set [2, 0];
 	} forEach dzn_zas_kitList;
@@ -312,18 +314,9 @@ dzn_zas_kitProcessUnit = {
 
 dzn_zas_kitAddDiaryActions = {
 	if NOT_ZEUS(player) exitWith {};
-	private["_record","_records"];
+	private["_record","_records","_recordCount","_recordId"];	
 	
-	_records = [
-		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowKits;'>Show All Kits</execute></font>"
-		,"<br />-------------------------------------"
-		,"<br /><font color='#A0DB65'><execute expression='""default"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign Default Kit to All Player</execute></font>"
-		,"<br /><font color='#A0DB65'><execute expression='[dzn_zas_kitDefaultOnRespawn, ""Default Kit""] call dzn_zas_kitAssignKitToSingle;'>Assign Default Kit to Specific Player</execute></font>"
-		,"<br />-------------------------------------"
-		,"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitRemoveAllKits;'>Remove All Kits</execute></font>"
-		,"<br />-------------------------------------"
-	];
-	
+	_records = [];
 	{
 		// [@Display, @Kit, @Count]
 		_records pushBack format[
@@ -337,9 +330,31 @@ dzn_zas_kitAddDiaryActions = {
 	} forEach dzn_zas_kitList;
 	
 	_record = "";
+	_recordCount = 1;	
+	_recordId = 1;
 	{
-		_record = format["%1%2",_record,_x];
+		//_record = format["%1%2",_record,_x];
+		_record = _record + _x;
+		_recordCount = _recordCount + 1;
+		if (_recordCount == 20 || _forEachIndex == (count _records)-1) then {			
+			player createDiaryRecord ["dzn_zas_page", [format ["Zeus Kits - %1",_recordId], _record]];
+			_recordId = _recordId + 1;
+			_recordCount = 0;
+			_record = "";
+		};
 	} forEach _records;
 	
-	player createDiaryRecord ["dzn_zas_page", ["Zeus Kits", _record]];
+	_record = "";
+	{
+		_record = _record + _x;
+	} forEach [
+		"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitShowKits;'>Show All Kits</execute></font>"
+		,"<br />-------------------------------------"
+		,"<br /><font color='#A0DB65'><execute expression='""default"" call dzn_zas_kitAssignKitToAlllPlayers;'>Assign Default Kit to All Player</execute></font>"
+		,"<br /><font color='#A0DB65'><execute expression='[dzn_zas_kitDefaultOnRespawn, ""Default Kit""] call dzn_zas_kitAssignKitToSingle;'>Assign Default Kit to Specific Player</execute></font>"
+		,"<br />-------------------------------------"
+		,"<br /><font color='#A0DB65'><execute expression='[] call dzn_zas_kitRemoveAllKits;'>Remove All Kits</execute></font>"
+		,"<br />-------------------------------------"
+	];
+	player createDiaryRecord ["dzn_zas_page", ["Zeus Kits Common", _record]];
 };
