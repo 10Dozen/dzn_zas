@@ -11,4 +11,4 @@
 _Island_: Altis
 <br />_Respawn_: Unlimited, Respawn Base
 <br />_Revive_: Arma 3 Revive
-<br />_Players_: Up to 10 + 1 GM
+<br />_Players_: Up to 20 + 1 GM
