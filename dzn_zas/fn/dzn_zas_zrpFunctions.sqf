@@ -5,8 +5,9 @@ dzn_zas_zrpIsOnRP = {
 
 dzn_zas_zrpMoveToRP = {
 	// @unit spawn dzn_zas_zrpMoveToRP;
-	
-	0 cutText ["", "WHITE OUT", 0.1];
+	if !(player in dzn_zas_zeuses) then {
+		0 cutText ["", "WHITE OUT", 0.1];
+	};
 	
 	_this allowDamage false;
 	if (vehicle _this != _this) then {
@@ -20,8 +21,10 @@ dzn_zas_zrpMoveToRP = {
 	
 	hint "Do not leave Rally Point!\nZeus will move you to your squad";
 	
-	sleep 2;
-	0 cutText ["", "WHITE IN", 1];
+	if !(player in dzn_zas_zeuses) then {
+		sleep 2;	
+		0 cutText ["", "WHITE IN", 1];
+	};
 };
 
 dzn_zas_zrpIsLeavingRP = {
