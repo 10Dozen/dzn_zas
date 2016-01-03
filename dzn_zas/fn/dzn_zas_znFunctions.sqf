@@ -23,7 +23,14 @@ dzn_zas_znReduceViewDistance = {
 		setObjectViewDistance [900, getObjectViewDistance select 1];
 	} else {
 		setViewDistance (viewDistance - _vdStep);
-		setObjectViewDistance [(getObjectViewDistance select 0) - _vodStep, getObjectViewDistance select 1];
+		setObjectViewDistance [
+			if ((getObjectViewDistance select 0) - _vodStep < 750) then {
+				750
+			} else { 
+				(getObjectViewDistance select 0) - _vodStep 
+			}
+			, getObjectViewDistance select 1
+		];
 	};
 
 	hintSilent parseText format [
